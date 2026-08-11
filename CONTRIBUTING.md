@@ -84,7 +84,18 @@ The build refuses to publish if any `$id` disagrees with the path it would be
 served from — a site that deploys but serves schemas elsewhere still 404s every
 identifier we have published, which is worse than not deploying at all.
 
-**One-time setup:** attach the custom domain `open3dpp.org` to the Cloudflare
-Pages project `open3dpp`. Without it the deploy succeeds but answers only on
-`open3dpp.pages.dev`. `scripts/deploy.sh` checks this at the end and tells you
-which of the two states you are in.
+**One-time setup, both parts required:**
+
+1. Attach the custom domain `open3dpp.org` to the Pages project `open3dpp`.
+2. Set the project's **production branch** to `main` (Pages → `open3dpp` →
+   Settings → Builds & deployments). A custom domain serves *production only*.
+   Deploy to any other branch and the upload succeeds while the domain returns
+   Cloudflare's "Deployment Not Found" — the site is live, but only on its
+   per-deployment `*.pages.dev` URL.
+
+If your project uses a different production branch, deploy with
+`OPEN3DPP_BRANCH=<branch> bash scripts/deploy.sh`.
+
+`scripts/deploy.sh` reports whether the deployment landed as Production or
+Preview, then fetches the `$id` and says whether it answers, so neither
+condition can fail silently.
