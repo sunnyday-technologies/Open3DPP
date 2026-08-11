@@ -33,7 +33,7 @@ ROOT_FILES = (
     "README.md", "Open3DPP_SCHEMA.md", "FIELDS.md", "CHANGELOG.md", "ADDENDUM.md",
     "CONTRIBUTING.md", "SECURITY.md", "CITATION.cff", "LICENSE", "NOTICE",
 )
-PUBLIC_DIRS = ("schemas", "examples", "research")
+PUBLIC_DIRS = ("schemas", "examples", "research", "assets")
 BLOCKED = ("scripts", ".github", ".git", ".cloudflare", "node_modules")
 SECRET_PATTERNS = (
     r"CLOUDFLARE_API_TOKEN\s*[:=]\s*\S",
