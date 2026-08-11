@@ -15,7 +15,7 @@
   "material_family": "ABS",
   "material_name": "pure transparent ABS",
   "material_type": "ABS",
-  "measurement_confidence": "measured",
+  "measurement_confidence": "calculated",
   "moisture_conditioning_path": "absorption",
   "moisture_response_r": -0.993,
   "n_specimens": 5,

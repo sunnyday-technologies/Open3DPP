@@ -122,15 +122,21 @@
     },
     "glass_transition_c": {
       "type": "number",
-      "description": "[composition] (degC) Tg, from datasheet. A KINETIC relaxation, not a thermodynamic transition: the value depends on method and rate, so keep it with its source and do not compare values obtained by different methods."
+      "description": "[composition] (degC) Tg, from datasheet. A KINETIC relaxation, not a thermodynamic transition: the value depends on method and rate, so keep it with its source and do not compare values obtained by different methods.",
+      "minimum": -273.15,
+      "maximum": 600
     },
     "melt_temperature_c": {
       "type": "number",
-      "description": "[composition] (degC) Tm \u2014 crystalline melt, semi-crystalline grades only."
+      "description": "[composition] (degC) Tm \u2014 crystalline melt, semi-crystalline grades only.",
+      "minimum": -273.15,
+      "maximum": 600
     },
     "softening_temperature_c": {
       "type": "number",
-      "description": "[composition] (degC) VENDOR-DECLARED softening / vitrification point (OrcaSlicer temperature_vitrification). Distinct from Tg (thermodynamic) and hdt_c (standard load-deflection test); record whichever the source actually stated, never convert."
+      "description": "[composition] (degC) VENDOR-DECLARED softening / vitrification point (OrcaSlicer temperature_vitrification). Distinct from Tg (thermodynamic) and hdt_c (standard load-deflection test); record whichever the source actually stated, never convert.",
+      "minimum": -273.15,
+      "maximum": 600
     },
     "is_semicrystalline": {
       "type": "boolean",
@@ -175,11 +181,15 @@
     },
     "break_temperature_c": {
       "type": "number",
-      "description": "[composition] (degC) Temperature at which the filament fractures cleanly when pulled (Cura 'break temperature'). A thermal-mechanical observable, not a print setting."
+      "description": "[composition] (degC) Temperature at which the filament fractures cleanly when pulled (Cura 'break temperature'). A thermal-mechanical observable, not a print setting.",
+      "minimum": -273.15,
+      "maximum": 600
     },
     "break_preparation_temperature_c": {
       "type": "number",
-      "description": "[composition] (degC) Pre-conditioning temperature before the break move (Cura 'break preparation temperature')."
+      "description": "[composition] (degC) Pre-conditioning temperature before the break move (Cura 'break preparation temperature').",
+      "minimum": -273.15,
+      "maximum": 600
     },
     "neat_tensile_strength_mpa": {
       "type": "number",
@@ -262,43 +272,63 @@
     },
     "min_print_temperature_c": {
       "type": "number",
-      "description": "[process] (degC) OpenPrintTag key 34 \u2014 nozzle range low."
+      "description": "[process] (degC) OpenPrintTag key 34 \u2014 nozzle range low.",
+      "minimum": -273.15,
+      "maximum": 600
     },
     "max_print_temperature_c": {
       "type": "number",
-      "description": "[process] (degC) OpenPrintTag key 35 \u2014 nozzle range high, as published by the source."
+      "description": "[process] (degC) OpenPrintTag key 35 \u2014 nozzle range high, as published by the source.",
+      "minimum": -273.15,
+      "maximum": 600
     },
     "print_temperature_c": {
       "type": "number",
-      "description": "[process] (degC) Chosen/consensus nozzle point (goal-neutral)."
+      "description": "[process] (degC) Chosen/consensus nozzle point (goal-neutral).",
+      "minimum": -273.15,
+      "maximum": 600
     },
     "min_bed_temperature_c": {
       "type": "number",
-      "description": "[process] (degC) OpenPrintTag key 37."
+      "description": "[process] (degC) OpenPrintTag key 37.",
+      "minimum": -273.15,
+      "maximum": 300
     },
     "max_bed_temperature_c": {
       "type": "number",
-      "description": "[process] (degC) OpenPrintTag key 38."
+      "description": "[process] (degC) OpenPrintTag key 38.",
+      "minimum": -273.15,
+      "maximum": 300
     },
     "bed_temperature_c": {
       "type": "number",
-      "description": "[process] (degC) Chosen/consensus bed point. Present for symmetry with print_temperature_c; the range columns remain authoritative."
+      "description": "[process] (degC) Chosen/consensus bed point. Present for symmetry with print_temperature_c; the range columns remain authoritative.",
+      "minimum": -273.15,
+      "maximum": 300
     },
     "min_chamber_temperature_c": {
       "type": "number",
-      "description": "[process] (degC) Chamber range low. v0.1 stored chamber as a bare point, which broke the schema's own range rule; both are now available."
+      "description": "[process] (degC) Chamber range low. v0.1 stored chamber as a bare point, which broke the schema's own range rule; both are now available.",
+      "minimum": -273.15,
+      "maximum": 300
     },
     "max_chamber_temperature_c": {
       "type": "number",
-      "description": "[process] (degC) Chamber range high."
+      "description": "[process] (degC) Chamber range high.",
+      "minimum": -273.15,
+      "maximum": 300
     },
     "chamber_temperature_c": {
       "type": "number",
-      "description": "[process] (degC) OpenPrintTag key 41 \u2014 chosen/ideal chamber point. The Orca/Bambu family writes 0 to mean 'no chamber / unset'; that sentinel is dropped at ingest rather than published as an ideal 0 degC chamber."
+      "description": "[process] (degC) OpenPrintTag key 41 \u2014 chosen/ideal chamber point. The Orca/Bambu family writes 0 to mean 'no chamber / unset'; that sentinel is dropped at ingest rather than published as an ideal 0 degC chamber.",
+      "minimum": -273.15,
+      "maximum": 300
     },
     "preheat_temperature_c": {
       "type": "number",
-      "description": "[process] (degC) OpenPrintTag key 36."
+      "description": "[process] (degC) OpenPrintTag key 36.",
+      "minimum": -273.15,
+      "maximum": 600
     },
     "first_layer_print_temperature_c": {
       "type": "number",
@@ -312,7 +342,9 @@
     },
     "standby_temperature_c": {
       "type": "number",
-      "description": "[process] (degC) Idle/standby nozzle temperature during tool changes (Cura 'standby temperature', Orca/Prusa idle_temperature)."
+      "description": "[process] (degC) Idle/standby nozzle temperature during tool changes (Cura 'standby temperature', Orca/Prusa idle_temperature).",
+      "minimum": -273.15,
+      "maximum": 600
     },
     "flow_temp_graph": {
       "type": "array",
@@ -378,7 +410,8 @@
     },
     "pressure_advance": {
       "type": "number",
-      "description": "[process] Pressure-advance / linear-advance factor."
+      "description": "[process] Pressure-advance / linear-advance factor.",
+      "minimum": 0
     },
     "fan_min_pct": {
       "type": "number",
@@ -394,11 +427,13 @@
     },
     "shrinkage_xy_pct": {
       "type": "number",
-      "description": "[process] (%) In-plane shrinkage compensation, 100 = no shrink (Cura cura:material_shrinkage_percentage(_xy), Orca/Prusa filament_shrink). First-order dimensional property."
+      "description": "[process] (%) In-plane shrinkage compensation, 100 = no shrink (Cura cura:material_shrinkage_percentage(_xy), Orca/Prusa filament_shrink). First-order dimensional property.",
+      "minimum": 0
     },
     "shrinkage_z_pct": {
       "type": "number",
-      "description": "[process] (%) Through-thickness shrinkage compensation, 100 = no shrink."
+      "description": "[process] (%) Through-thickness shrinkage compensation, 100 = no shrink.",
+      "minimum": 0
     },
     "infill_density_pct": {
       "type": "number",
@@ -427,7 +462,9 @@
     },
     "drying_temperature_c": {
       "type": "number",
-      "description": "[process] (degC) OpenPrintTag key 57 \u2014 drying AS PERFORMED for this observation. The vendor-published limit is max_dry_temperature_c (block M)."
+      "description": "[process] (degC) OpenPrintTag key 57 \u2014 drying AS PERFORMED for this observation. The vendor-published limit is max_dry_temperature_c (block M).",
+      "minimum": -273.15,
+      "maximum": 300
     },
     "drying_time_min": {
       "type": "number",
@@ -527,7 +564,9 @@
     },
     "raster_angle_deg": {
       "type": "number",
-      "description": "[geometry] (deg) Raster/infill angle relative to the load axis."
+      "description": "[geometry] (deg) Raster/infill angle relative to the load axis.",
+      "minimum": -180,
+      "maximum": 360
     },
     "is_standard_coupon": {
       "type": "boolean",
@@ -646,7 +685,9 @@
     },
     "hdt_c": {
       "type": "number",
-      "description": "[properties] (degC) Heat-deflection temperature. MEANINGLESS without its load and standard (commonly 0.45 or 1.80 MPa; ISO 75 / ASTM D648). The schema has no column for them yet: record them in provenance_notes and do not compare across sources."
+      "description": "[properties] (degC) Heat-deflection temperature. MEANINGLESS without its load and standard (commonly 0.45 or 1.80 MPa; ISO 75 / ASTM D648). The schema has no column for them yet: record them in provenance_notes and do not compare across sources.",
+      "minimum": -273.15,
+      "maximum": 600
     },
     "hdt_stddev_c": {
       "type": "number",
@@ -669,7 +710,9 @@
     },
     "max_dry_temperature_c": {
       "type": "number",
-      "description": "[moisture] (degC) Vendor-published maximum drying temperature (OFD max_dry_temperature, falling back to the material-family default when the product states none; the lowest stated value wins), recorded as published and NOT verified. Distinct from process drying_temperature_c, which is what was actually done. Follow the manufacturer's drying instructions; exceeding them can damage material or equipment."
+      "description": "[moisture] (degC) Vendor-published maximum drying temperature (OFD max_dry_temperature, falling back to the material-family default when the product states none; the lowest stated value wins), recorded as published and NOT verified. Distinct from process drying_temperature_c, which is what was actually done. Follow the manufacturer's drying instructions; exceeding them can damage material or equipment.",
+      "minimum": -273.15,
+      "maximum": 300
     },
     "filament_moisture_pct": {
       "type": "number",
@@ -705,7 +748,8 @@
     },
     "strength_loss_per_pct_moisture": {
       "type": "number",
-      "description": "[moisture] (1/%) POSITIVE magnitude of the relative strength loss per percentage point of moisture, referenced to the dry intercept: a FRACTION per percent, not percent per percent. 0.47 means 47% of dry strength lost per 1 wt% moisture. Model: sigma(w) = sigma0 * (1 - loss * w)."
+      "description": "[moisture] (1/%) POSITIVE magnitude of the relative strength loss per percentage point of moisture, referenced to the dry intercept: a FRACTION per percent, not percent per percent. 0.47 means 47% of dry strength lost per 1 wt% moisture. Model: sigma(w) = sigma0 * (1 - loss * w).",
+      "minimum": 0
     },
     "moisture_response_r": {
       "type": "number",
