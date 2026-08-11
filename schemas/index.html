@@ -1,0 +1,32 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Schemas — Open3DPP</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root{color-scheme:light dark}
+  body{max-width:52rem;margin:3rem auto;padding:0 1.5rem;line-height:1.65;
+       font-family:'Raleway',system-ui,-apple-system,sans-serif;color:#1f2a33;background:#f7f8f5}
+  h1{font-family:'Barlow',system-ui,sans-serif;font-size:1.9rem;margin-bottom:.15rem}
+  .sub{color:#5b6a75;margin-top:0;font-size:.95rem}
+  a{color:#4a6b00}
+  table{border-collapse:collapse;width:100%;margin-top:1.2rem}
+  th,td{text-align:left;padding:.45rem .8rem .45rem 0;border-bottom:1px solid #dde2da;
+        font-size:.93rem;vertical-align:top}
+  th{font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:.72rem;
+     letter-spacing:.12em;text-transform:uppercase;color:#5b6a75}
+  code{font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:.88em}
+  .back{display:inline-block;margin-top:2rem;font-size:.9rem}
+  @media(prefers-color-scheme:dark){body{background:#060d14;color:#f0f4f7}
+    .sub,th{color:#c2d4e0} a{color:#97d700} th,td{border-color:#1a3350}}
+</style>
+<h1>Schemas</h1>
+<p class="sub">Draft 2020-12. Version-exact: each pins <code>schema_version</code> and rejects unknown properties, so validate a record against the schema matching its own version. There is deliberately no <code>latest</code> alias. See <a href='/schemas/README.md'>README</a>.</p>
+<table>
+  <tr><th>File</th><th>What it is</th></tr>
+    <tr><td><a href="/schemas/core/v0.1.0/open3dpp-record.schema.json"><code>open3dpp-record.schema.json</code></a></td><td>Core record, v0.1.0 — current.</td></tr>
+    <tr><td><a href="/schemas/addendum/v0.1.0/applied-system-context.schema.json"><code>applied-system-context.schema.json</code></a></td><td>Applied-System Addendum sidecar, v0.1.0.</td></tr>
+    <tr><td><a href="/schemas/addendum/v0.1.0/artifact-timeseries-manifest.schema.json"><code>artifact-timeseries-manifest.schema.json</code></a></td><td>Applied-System Addendum sidecar, v0.1.0.</td></tr>
+    <tr><td><a href="/schemas/addendum/v0.1.0/measurement-outcome-bundle.schema.json"><code>measurement-outcome-bundle.schema.json</code></a></td><td>Applied-System Addendum sidecar, v0.1.0.</td></tr>
+    <tr><td><a href="/schemas/README.md"><code>README.md</code></a></td><td>Version index and the permanence policy.</td></tr>
+</table>
+<a class="back" href="/">&larr; Open3DPP</a>

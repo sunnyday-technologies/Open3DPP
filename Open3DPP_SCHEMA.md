@@ -114,7 +114,8 @@ Schemas are **version-exact**: each pins `schema_version` with `const` and rejec
 properties, so validate a record against the schema matching its own `schema_version`. There is
 deliberately no `latest` alias — see [`schemas/README.md`](schemas/README.md).
 
-A published schema artifact is **permanent**: superseded by a new version, never rewritten in
+**Permanence begins at the first announced release.** From that point a published schema artifact
+is superseded by a new version, never rewritten in
 place and never removed. Column changes are additive within a major series; a column is never
 renamed or repurposed, because a consumer that pinned a version must keep resolving the same
 bytes. Changes are recorded in [`CHANGELOG.md`](CHANGELOG.md).

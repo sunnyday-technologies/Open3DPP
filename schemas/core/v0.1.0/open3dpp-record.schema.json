@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://open3dpp.org/schemas/core/v0.1.0/open3dpp-record.schema.json",
   "title": "Open3DPP Core Record",
-  "description": "One characterization observation of an FFF polymer material: a settings card, a measured specimen, or a moisture response. Unknown = absent/null, never invented; vendor claims are recorded as published and are not verified. Equipment, environment and QMS context are out of scope for this record and are addressed by a planned companion Applied-System Addendum (not yet published). VALIDATION POLICY: this schema is version-exact \u2014 it pins schema_version by const and is closed to unknown properties, so validate each record against the schema matching its own schema_version.",
+  "description": "One characterization observation of an FFF polymer material: a settings card, a measured specimen, or a moisture response. Unknown = absent/null, never invented; vendor claims are recorded as published and are not verified. Equipment, environment, measurement method and external artifacts are out of scope for this record and are carried by the Applied-System Addendum sidecars at https://open3dpp.org/schemas/addendum/v0.1.0/ , which reference a core record via core_record_ref. A core record is complete without a sidecar and carries no back-link to one. VALIDATION POLICY: this schema is version-exact \u2014 it pins schema_version by const and is closed to unknown properties, so validate each record against the schema matching its own schema_version.",
   "type": "object",
   "required": [
     "record_id",
@@ -333,12 +333,14 @@
     "first_layer_print_temperature_c": {
       "type": "number",
       "description": "[process] (degC) Nozzle temperature for the FIRST layer, which vendors commonly raise above the bulk value for adhesion. Distinct from print_temperature_c; absent means the source stated one temperature, not that the two are equal.",
-      "minimum": 0
+      "minimum": -273.15,
+      "maximum": 600
     },
     "first_layer_bed_temperature_c": {
       "type": "number",
       "description": "[process] (degC) Bed temperature for the FIRST layer, commonly raised above the bulk value. Distinct from bed_temperature_c; absent means the source stated one temperature.",
-      "minimum": 0
+      "minimum": -273.15,
+      "maximum": 300
     },
     "standby_temperature_c": {
       "type": "number",

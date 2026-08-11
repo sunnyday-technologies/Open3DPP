@@ -6,7 +6,7 @@
 
 ## Decision
 
-Open3DPP's existing 99-column flat record remains the analysis-ready polymer record. This
+Open3DPP's flat core record remains the analysis-ready polymer record. This
 addendum supplies relational context as linked sidecars rather than adding columns or changing
 Open3DCP:
 
@@ -122,13 +122,18 @@ consent requires a timestamp and basis. Artifact payload access and redistributi
 by each artifact's rights record; a public artifact override requires cleared, licensed,
 redistributable rights. Model-training consent is never inferred from public access or service use.
 
-These schemas are candidates for public release, but the repository has no root license and no
-redistribution license is granted by this draft. Public access alone is not permission to copy,
-modify, or redistribute the schemas or their instances. Before publication, the owner must choose
-and apply the intended code/schema license and third-party notices. A public record should omit or
-pseudonymize unit serials, people, exact location, confidential process artifacts, and
-tenant-private outcomes. An NFC/QR tag should carry a resolver ID or compact public projection,
-not a private sidecar.
+**Licensing.** These schemas are published under **Apache-2.0**, the same licence as the rest of
+the repository — see `LICENSE` and `NOTICE`. That grant covers the schemas themselves.
+
+It does **not** extend to the data a record carries. A sidecar describes equipment, environment,
+people and artifacts, so an instance may contain personal data, confidential process detail or
+third-party material whose rights sit with someone else entirely. Rights over an artifact's
+payload are governed by that artifact's own rights record, not by this licence, and permission to
+redistribute a schema is not permission to redistribute what someone recorded with it.
+
+A public record should therefore omit or pseudonymize unit serials, people, exact location,
+confidential process artifacts, and tenant-private outcomes. An NFC/QR tag should carry a
+resolver ID or compact public projection, not a private sidecar.
 
 ## Extensions and crosswalks
 
@@ -150,20 +155,25 @@ Crosswalk declarations provide lineage; they are not claims of certification or 
 
 ## Validation
 
-Run the dependency-free structure/invariant check:
+Each sidecar is a Draft 2020-12 JSON Schema and validates with any conforming validator:
 
-```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File tools/validate_open3dpp_addendum.ps1
+```bash
+pip install check-jsonschema
+check-jsonschema   --schemafile https://open3dpp.org/schemas/addendum/v0.1.0/applied-system-context.schema.json   my-context.json
 ```
 
-It parses all schemas and examples and checks the critical compatibility, privacy,
-planned-versus-actual, origin, hash, and namespace invariants. The companion Python test runs a
-Draft 2020-12 validator plus negative cases for governance, consent, artifact rights, reported
-sources, run realization, and fingerprint scope:
+```python
+import json, urllib.request, jsonschema
 
-```powershell
-python tools/test_open3dpp_addendum_jsonschema.py
+url = ("https://open3dpp.org/schemas/addendum/v0.1.0/"
+       "applied-system-context.schema.json")
+req = urllib.request.Request(url, headers={"User-Agent": "open3dpp-example/1.0"})
+schema = json.load(urllib.request.urlopen(req))
+jsonschema.validate(json.load(open("my-context.json")), schema)
 ```
+
+The worked examples under `examples/addendum/` validate against their schemas and are the
+fastest way to see the shape a sidecar takes.
 
 ## Change policy
 

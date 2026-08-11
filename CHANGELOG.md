@@ -5,13 +5,30 @@ version-exact (`schema_version` is pinned by `const` and unknown properties are
 rejected). Validate a record against the schema matching its own
 `schema_version`.
 
-A published schema artifact is permanent: it is superseded by a new version,
-never rewritten in place and never removed. Column changes are additive within a
-major series — a column is never renamed or repurposed — because a consumer that
-pinned a version must keep resolving the same bytes. The release gate enforces
-both properties on every publish.
+**Permanence begins at the first announced release.** From that point a
+published schema artifact is superseded by a new version, never rewritten in
+place and never removed, because a consumer that pinned a version must keep
+resolving the same bytes. Column changes are additive within a major series: a
+column is never renamed or repurposed. The release gate enforces both.
+
+Before announcement there are no consumers, and a correction is better than a
+version number spent papering over one. v0.1.0 was re-cut once under that rule —
+see below.
 
 ## v0.1.0 — 2026-08-11
+
+> **Re-cut before announcement (same day).** A pre-announcement review found
+> three defects in the artifacts as first published: the core schema's own
+> description told readers the Applied-System Addendum was "not yet published"
+> while three addendum schemas were already serving on the same host; the
+> measurement-outcome sidecar `const`-pinned its receipt reference to a single
+> vendor's schema URL *and* made that reference required, so a conforming
+> bundle was machine-impossible without naming the maintainer's commercial
+> product; and the two first-layer temperature columns carried a floor but no
+> ceiling, unlike every sibling temperature. All three are corrected in the
+> artifacts now served. No column was added, removed or renamed. This is the
+> one correction permitted before announcement; from here the permanence rule
+> above applies without exception.
 
 First public release. 152 typed columns in 8 blocks, each with a name, a type,
 a unit and a one-line description generated from a single canonical definition,
@@ -60,7 +77,7 @@ apart.
 ### What it deliberately does not carry
 
 Equipment and environment records (a planned Applied-System Addendum of linked
-sidecars, not yet published); compatibility matrices of material × printer ×
+sidecars, published alongside this release); compatibility matrices of material × printer ×
 hotend, which are a different cardinality from "one row = one observation"; and
 slicer implementation knobs, which are machine mechanics rather than material
 characterization.

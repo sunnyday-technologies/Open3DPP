@@ -611,7 +611,25 @@
       background: #97d700;
       color: #071421;
     }
-  </style>
+  
+    /* --- Accessibility override (Open3DPP) -------------------------------
+       Contrast only. The brand stylesheet above is unmodified; these rules
+       repoint text that used the bright accent (1.64:1 here) to the palette's
+       dim accent (5.80:1). Fills and dark-surface uses are left alone. */
+    h1 span,
+    .hero-label,
+    .spec-unit,
+    footer a,
+    nav a:hover,
+    .footer-left a:hover { color: #4a6b00; }
+    /* Visible keyboard focus: the lifted sheet defines none. */
+    a:focus-visible,
+    button:focus-visible {
+      outline: 3px solid #013a73;
+      outline-offset: 2px;
+      border-radius: 2px;
+    }
+</style>
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -654,6 +672,7 @@
       <a href="https://github.com/sunnyday-technologies/Open3DPP/blob/main/FIELDS.md" target="_blank" rel="noopener" aria-label="Open3DPP field reference">Fields</a> &nbsp;&nbsp;
       <a href="https://github.com/sunnyday-technologies/Open3DPP/blob/main/Open3DPP_SCHEMA.md" target="_blank" rel="noopener" aria-label="Open3DPP schema reference">Reference</a> &nbsp;&nbsp;
       <a href="/examples/" aria-label="Open3DPP example records">Examples</a> &nbsp;&nbsp;
+      <a href="/ADDENDUM.md" aria-label="Open3DPP Applied-System Addendum">Addendum</a> &nbsp;&nbsp;
       <a href="https://github.com/sunnyday-technologies/Open3DPP" target="_blank" rel="noopener" aria-label="Open3DPP schema repository on GitHub (opens in new tab)">GitHub</a> &nbsp;&nbsp;
       <a href="https://github.com/sunnyday-technologies/Open3DCP" target="_blank" rel="noopener" aria-label="Open3DCP, the concrete sibling standard (opens in new tab)">Open3DCP</a> &nbsp;&nbsp;
       <a href="https://sunn3d.com" target="_blank" rel="noopener" aria-label="Sunnyday Technologies parent site (opens in new tab)">sunn3d.com</a>
@@ -774,6 +793,21 @@
 
     <div class="content-block">
       <div class="block-num">// 06</div>
+      <div class="block-title">Applied-System Addendum</div>
+      <p class="block-body">
+        Equipment, environment, measurement method and external artifacts are
+        deliberately outside a core record: a core row is one observation, and
+        that context describes the run which produced it. Three
+        <a href="/schemas/addendum/v0.1.0/applied-system-context.schema.json">sidecar
+        schemas</a> carry it, each referencing a core record and versioning
+        independently &mdash; so a core release never invalidates a sidecar, and
+        a record is complete without one.
+        <a href="/ADDENDUM.md">Read the addendum &rarr;</a>
+      </p>
+    </div>
+
+    <div class="content-block">
+      <div class="block-num">// 07</div>
       <div class="block-title">Validating A Record</div>
       <p class="block-body">
         Schemas are version-exact: <code>schema_version</code> is pinned by

@@ -4,24 +4,32 @@
 > schema: one row = one observation of a material — a settings card
 > (recommended conditions), a measured specimen (geometry + mechanical
 > properties), or a moisture response (a fitted property-vs-moisture relation).
-> 150 columns in 8 blocks, each with a name, type, unit and purpose.
+> 152 columns in 8 blocks, each with a name, type, unit and purpose.
 
-Maintained by Sunnyday Technologies. Apache-2.0. Draft v0.1.0 — a community
+Maintained by Sunnyday Technologies LLC. Apache-2.0. Draft v0.1.0 — a community
 specification, not a standards-body publication, and not a certification.
 
-The repository is authoritative; this site serves it so schema identifiers resolve.
-
 ## Canonical documents
-- Repository: https://github.com/sunnyday-technologies/Open3DPP
-- Current JSON Schema: https://open3dpp.org/schemas/core/v0.1.0/open3dpp-record.schema.json
-- Field reference (150 columns): https://github.com/sunnyday-technologies/Open3DPP/blob/main/FIELDS.md
-- Schema reference: https://github.com/sunnyday-technologies/Open3DPP/blob/main/Open3DPP_SCHEMA.md
-- Changelog: https://github.com/sunnyday-technologies/Open3DPP/blob/main/CHANGELOG.md
+- Repository (authoritative): https://github.com/sunnyday-technologies/Open3DPP
+- Core JSON Schema: https://open3dpp.org/schemas/core/v0.1.0/open3dpp-record.schema.json
+- Field reference (152 columns): https://open3dpp.org/FIELDS.md
+- Schema reference: https://open3dpp.org/Open3DPP_SCHEMA.md
+- Changelog: https://open3dpp.org/CHANGELOG.md
+- Applied-System Addendum: https://open3dpp.org/ADDENDUM.md
 - Format research: https://github.com/sunnyday-technologies/Open3DPP/blob/main/research/cura-fdm-material-census/report.md
+
+## Applied-System Addendum
+Linked sidecars for the applied context a core record deliberately excludes —
+equipment, environment, measurement method, external artifacts. Each references
+a core record and versions independently; a core record is complete without one.
+- https://open3dpp.org/schemas/addendum/v0.1.0/applied-system-context.schema.json
+- https://open3dpp.org/schemas/addendum/v0.1.0/artifact-timeseries-manifest.schema.json
+- https://open3dpp.org/schemas/addendum/v0.1.0/measurement-outcome-bundle.schema.json
 
 ## How to use it
 Validate a record against the schema whose version equals the record's own
-`schema_version`. Schemas are closed and version-exact by design.
+`schema_version`. Schemas are closed and version-exact by design; there is no
+`latest` alias, because a moving pointer would break every pinned consumer.
 
 ## What it is not
 Not printing or engineering advice. Not a materials database — it hosts no
