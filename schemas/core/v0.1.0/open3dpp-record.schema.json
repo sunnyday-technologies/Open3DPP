@@ -67,7 +67,7 @@
     },
     "color_name": {
       "type": "string",
-      "description": "[identity] Vendor's name for the colour/finish variant."
+      "description": "[identity] Vendor's name for the colour/finish variant. On an aggregate settings card this is one deterministically-chosen name from the material's published variants, not a designated primary \u2014 use a variant record when colour matters."
     },
     "color_hex": {
       "type": "string",

@@ -16,6 +16,7 @@ specification, not a standards-body publication, and not a certification.
 - Schema reference: https://open3dpp.org/Open3DPP_SCHEMA.md
 - Changelog: https://open3dpp.org/CHANGELOG.md
 - Applied-System Addendum: https://open3dpp.org/ADDENDUM.md
+- Crosswalk from Cura / OFD / Orca / Prusa: https://open3dpp.org/CROSSWALK.md
 - Format research: https://github.com/sunnyday-technologies/Open3DPP/blob/main/research/cura-fdm-material-census/report.md
 
 ## Applied-System Addendum
@@ -25,6 +26,10 @@ a core record and versions independently; a core record is complete without one.
 - https://open3dpp.org/schemas/addendum/v0.1.0/applied-system-context.schema.json
 - https://open3dpp.org/schemas/addendum/v0.1.0/artifact-timeseries-manifest.schema.json
 - https://open3dpp.org/schemas/addendum/v0.1.0/measurement-outcome-bundle.schema.json
+
+## Contributing
+Anyone can propose a field or a correction through GitHub issues; no affiliation
+is required. See CONTRIBUTING.md in the repository.
 
 ## How to use it
 Validate a record against the schema whose version equals the record's own

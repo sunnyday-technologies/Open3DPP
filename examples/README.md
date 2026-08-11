@@ -13,7 +13,7 @@ One record per `record_kind`, each validated against
 |---|---|---|
 | [`measured-specimen.example.json`](measured-specimen.example.json) | `measured_specimen` | A mechanical test result with its provenance, a stated test standard (ISO 527-type tensile). 33 fields populated. |
 | [`moisture-response.example.json`](moisture-response.example.json) | `moisture_response` | A fitted property-vs-moisture relation (block M) - neither a settings card nor a single specimen, a stated test standard (ISO 527), a moisture-response slope. 36 fields populated. |
-| [`settings-card.example.json`](settings-card.example.json) | `settings_card` | Recommended conditions with no test attached: temperature ranges rather than midpoints, reinforcement content, vendor drying limits. 40 fields populated. |
+| [`settings-card.example.json`](settings-card.example.json) | `settings_card` | Recommended conditions with no test attached: temperature ranges rather than midpoints, reinforcement content, vendor drying limits. 41 fields populated. |
 
 ## Attribution
 

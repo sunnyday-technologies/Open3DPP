@@ -30,7 +30,7 @@ MAX_BYTES = 2 * 1024 * 1024
 ROOT_FILES = (
     "index.html", "404.html",
     "robots.txt", "sitemap.xml", "llms.txt", "_headers",
-    "README.md", "Open3DPP_SCHEMA.md", "FIELDS.md", "CHANGELOG.md", "ADDENDUM.md",
+    "README.md", "Open3DPP_SCHEMA.md", "FIELDS.md", "CHANGELOG.md", "ADDENDUM.md", "CROSSWALK.md",
     "CONTRIBUTING.md", "SECURITY.md", "CITATION.cff", "LICENSE", "NOTICE",
 )
 PUBLIC_DIRS = ("schemas", "examples", "research", "assets")

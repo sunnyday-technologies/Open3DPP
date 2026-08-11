@@ -21,7 +21,7 @@ Generated from the canonical definition (one table: name, type, unit, doc).
 | `material_class` | str | — | — | OpenPrintTag key 8 — 'FFF'. |
 | `material_type` | str | — | — | OpenPrintTag key 9 enum abbreviation, or NULL (unspecified). |
 | `material_family` | str | — | — | Our controlled vocabulary (PLA/PETG/.../OTHER). |
-| `color_name` | str | — | — | Vendor's name for the colour/finish variant. |
+| `color_name` | str | — | — | Vendor's name for the colour/finish variant. On an aggregate settings card this is one deterministically-chosen name from the material's published variants, not a designated primary — use a variant record when colour matters. |
 | `color_hex` | str | — | pattern | A representative '#RRGGBB'. On a variant record it is that variant's colour. On an aggregate settings card it is one deterministically-chosen hex from the material's published variants and is NOT a designated primary — use a variant record when colour matters. |
 | `vendor_material_guid` | str | — | — | NON-AUTHORITATIVE alias: the vendor/slicer-assigned GUID, e.g. the Cura fdm_material GUID element. Vendor-generated, one per profile file, and it folds diameter into identity — never join on it alone. |
 | `lifecycle_status` | str | — | — | active \| discontinued \| unknown (see LIFECYCLE_STATUS). 'unknown' and an absent value mean the same thing; prefer absence, and use 'unknown' only to record that a source was consulted and did not say. Enum: `active` \| `discontinued` \| `unknown`. |

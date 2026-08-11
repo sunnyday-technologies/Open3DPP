@@ -10,6 +10,7 @@ conformance certification, is implied.</em></p>
   <a href="examples/">Examples</a> ·
   <a href="CHANGELOG.md">Changelog</a> ·
   <a href="ADDENDUM.md">Addendum</a> ·
+  <a href="CROSSWALK.md">Crosswalk</a> ·
   <a href="CONTRIBUTING.md">Contributing</a>
 </p>
 
@@ -102,6 +103,24 @@ jsonschema.validate(record, schema)   # raises on a non-conforming record
 ```
 
 Absent means unknown: omit a field rather than filling it with a zero or a guess.
+
+## Coming from a format you already have
+
+You probably already hold this data in a slicer profile or a filament database.
+[CROSSWALK.md](CROSSWALK.md) maps Cura `fdm_material`, the Open Filament Database, and the
+OrcaSlicer / Bambu Studio / PrusaSlicer families onto Open3DPP columns, field by field, with
+the count of records each mapping actually populates. It is generated from the code that
+performs the mapping, so it cannot drift into describing something the tooling does not do.
+
+## Contributing
+
+**Anyone can propose a change through GitHub.** A field the schema cannot express is a gap
+worth reporting, not a reason to bend an existing column — open a
+[field proposal](https://github.com/sunnyday-technologies/Open3DPP/issues/new?template=field-proposal.md)
+or a [correction](https://github.com/sunnyday-technologies/Open3DPP/issues/new?template=data-correction.md).
+[CONTRIBUTING.md](CONTRIBUTING.md) explains what a proposal needs and how a change lands: what
+counts as additive, why published artifacts are never rewritten, and how a new column reaches a
+release. No affiliation or prior involvement is required.
 
 ## Governing principles
 

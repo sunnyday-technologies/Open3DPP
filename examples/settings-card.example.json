@@ -4,6 +4,7 @@
   "brand_uuid": "804b5d23-5932-59a6-910f-217b7f6ae206",
   "chamber_temperature_c": 60.0,
   "color_hex": "#000000",
+  "color_name": "Black",
   "density_g_cm3": 1.24,
   "filament_diameter_mm": 1.75,
   "filament_diameter_tolerance_mm": 0.03,
