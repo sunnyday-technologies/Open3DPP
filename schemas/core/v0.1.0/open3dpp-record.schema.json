@@ -300,6 +300,16 @@
       "type": "number",
       "description": "[process] (degC) OpenPrintTag key 36."
     },
+    "first_layer_print_temperature_c": {
+      "type": "number",
+      "description": "[process] (degC) Nozzle temperature for the FIRST layer, which vendors commonly raise above the bulk value for adhesion. Distinct from print_temperature_c; absent means the source stated one temperature, not that the two are equal.",
+      "minimum": 0
+    },
+    "first_layer_bed_temperature_c": {
+      "type": "number",
+      "description": "[process] (degC) Bed temperature for the FIRST layer, commonly raised above the bulk value. Distinct from bed_temperature_c; absent means the source stated one temperature.",
+      "minimum": 0
+    },
     "standby_temperature_c": {
       "type": "number",
       "description": "[process] (degC) Idle/standby nozzle temperature during tool changes (Cura 'standby temperature', Orca/Prusa idle_temperature)."

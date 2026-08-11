@@ -38,13 +38,13 @@ concentration. **Geometry is therefore a first-class characterization axis**, no
 settings-only format (OpenPrintTag) structurally cannot carry it, which is exactly why Open3DPP
 exists alongside the tag.
 
-## Blocks (150 columns; every column carries type + unit + doc in code)
+## Blocks (152 columns; every column carries type + unit + doc in code)
 
 | Block | Cols | Purpose |
 |---|--:|---|
 | **A. Identity** | 19 | brand/material/variant UUIDs, GTIN/SKU, colour, vendor-GUID alias, lifecycle, `material_type` enum (OpenPrintTag-aligned) |
 | **B. Composition** | 23 | material intrinsics: density, Tg/Tm/softening, crystallinity class + %, filler, hardness, surface-energy & adhesion descriptors, break temps, solubility, controlled `trait_tags` |
-| **C. Process** | 35 | print conditions; **every temperature stored as `min`/`max` range** (nozzle, bed, and now chamber), flow-temp graph, material-side hardware requirements (min nozzle Ø, nozzle HRC), shrinkage, drying-as-performed |
+| **C. Process** | 37 | print conditions; **every temperature stored as `min`/`max` range** (nozzle, bed, and now chamber), flow-temp graph, material-side hardware requirements (min nozzle Ø, nozzle HRC), shrinkage, drying-as-performed |
 | **D. Geometry** | 18 | **shape context**: specimen std/dims, skin thickness, orientation, raster, layer count, layer-time & thermal-mass proxies |
 | **E. Structure** | 8 | ICME mediators: as-printed part density, void fraction, degree-of-healing, crystallinity, fiber alignment, roughness |
 | **F. Properties** | 17 | tensile/flexural/impact/**interlayer-Z**/HDT — now **every** property has a paired stddev column |
@@ -98,7 +98,7 @@ material-level temperature range, so the two must not be reconciled.
 
 ## Boundaries (what Open3DPP deliberately does NOT carry)
 
-- **Equipment/environment records** — the Applied-System Addendum owns exact system identity,
+- **Equipment/environment records** — the [Applied-System Addendum](ADDENDUM.md) owns exact system identity,
   components, calibration, environment time series, QMS and rights. The core keeps only
   `printer_model_reported`: the coarse string a harvested source actually stated.
 - **Compatibility matrices** (material × printer × hotend → verdict, as in Cura's

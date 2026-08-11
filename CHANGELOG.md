@@ -13,7 +13,7 @@ both properties on every publish.
 
 ## v0.1.0 — 2026-08-11
 
-First public release. 150 typed columns in 8 blocks, each with a name, a type,
+First public release. 152 typed columns in 8 blocks, each with a name, a type,
 a unit and a one-line description generated from a single canonical definition,
 so the field reference, the JSON Schema and the emitted records cannot drift
 apart.
@@ -25,7 +25,7 @@ apart.
 - **B. Composition** (23) — density, Tg / Tm / softening point, crystallinity,
   filler, hardness, surface-energy and adhesion descriptors, break
   temperatures, solubility, a controlled trait vocabulary.
-- **C. Process** (35) — print conditions, with **every temperature stored as a
+- **C. Process** (37) — print conditions, with **every temperature stored as a
   min/max range** rather than a midpoint; a flow-to-temperature curve when a
   source publishes one; material-side hardware requirements; shrinkage.
 - **D. Geometry** (18) — the ICME axis a settings-only format cannot carry:
@@ -64,6 +64,17 @@ sidecars, not yet published); compatibility matrices of material × printer ×
 hotend, which are a different cardinality from "one row = one observation"; and
 slicer implementation knobs, which are machine mechanics rather than material
 characterization.
+
+### Applied-System Addendum
+
+Equipment, environment, measurement method and external artifacts are carried by
+linked sidecars rather than by the core record, because a core row is one
+observation and that context describes the run that produced it. Three schemas
+ship alongside the core: applied-system context, measurement/outcome bundle, and
+artifact/time-series manifest. Each references a core record through
+`core_record_ref` and versions independently, so a core bump never invalidates a
+sidecar, and the core carries no back-link — a record is complete without one.
+See [ADDENDUM.md](ADDENDUM.md).
 
 ### Research behind it
 

@@ -3,9 +3,24 @@
 Every version of Open3DPP ships its own JSON Schema (Draft 2020-12) under
 `core/v<version>/open3dpp-record.schema.json`.
 
+### Core record
+
 | Version | Status | Schema |
 |---|---|---|
 | v0.1.0 | **current** | [`core/v0.1.0/open3dpp-record.schema.json`](core/v0.1.0/open3dpp-record.schema.json) |
+
+### Applied-System Addendum
+
+Linked sidecars for the applied context a core record deliberately excludes:
+equipment, environment, measurement method and external artifacts. Each
+references a core record through `core_record_ref` and versions independently,
+so a core bump never invalidates a sidecar. See [`../ADDENDUM.md`](../ADDENDUM.md).
+
+| Version | Sidecar | Schema |
+|---|---|---|
+| v0.1.0 | Applied system | [`addendum/v0.1.0/applied-system-context.schema.json`](addendum/v0.1.0/applied-system-context.schema.json) |
+| v0.1.0 | Measurement / outcome | [`addendum/v0.1.0/measurement-outcome-bundle.schema.json`](addendum/v0.1.0/measurement-outcome-bundle.schema.json) |
+| v0.1.0 | Artifacts / time series | [`addendum/v0.1.0/artifact-timeseries-manifest.schema.json`](addendum/v0.1.0/artifact-timeseries-manifest.schema.json) |
 
 ## There is deliberately no `latest` pointer
 

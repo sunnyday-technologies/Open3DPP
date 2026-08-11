@@ -1,0 +1,315 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://open3dpp.org/schemas/addendum/v0.1.0/artifact-timeseries-manifest.schema.json",
+  "title": "Open3DPP Artifact and Time-Series Manifest",
+  "description": "Content-addressed references for external logs, images, video, sensor data, configurations, geometry, and reports.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "manifest_id",
+    "revision",
+    "created_at",
+    "context_ref",
+    "artifacts",
+    "governance",
+    "provenance"
+  ],
+  "properties": {
+    "schema_version": { "const": "0.1.0" },
+    "manifest_id": { "$ref": "#/$defs/id" },
+    "revision": { "$ref": "#/$defs/revision" },
+    "created_at": { "type": "string", "format": "date-time" },
+    "context_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["context_id", "revision"],
+      "properties": {
+        "context_id": { "$ref": "#/$defs/id" },
+        "revision": { "$ref": "#/$defs/revision" },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "artifacts": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/artifact" }
+    },
+    "governance": { "$ref": "#/$defs/governance" },
+    "provenance": { "$ref": "#/$defs/provenance" },
+    "external_crosswalks": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/crosswalk" }
+    },
+    "extensions": { "$ref": "#/$defs/extensions" }
+  },
+  "$defs": {
+    "id": { "type": "string", "minLength": 1, "maxLength": 240 },
+    "revision": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,79}$" },
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "idArray": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/id" }
+    },
+    "artifactRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact_id"],
+      "properties": {
+        "artifact_id": { "$ref": "#/$defs/id" },
+        "uri": { "type": "string", "format": "uri" },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "sourceRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_id", "revision", "rights_status"],
+      "properties": {
+        "source_id": { "$ref": "#/$defs/id" },
+        "uri": { "type": "string", "format": "uri" },
+        "revision": { "$ref": "#/$defs/revision" },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "rights_status": { "enum": ["cleared", "restricted", "unknown"] },
+        "license": { "type": "string", "minLength": 1, "maxLength": 240 }
+      }
+    },
+    "rights": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["rights_status", "redistribution_allowed"],
+      "properties": {
+        "rights_status": { "enum": ["cleared", "restricted", "unknown"] },
+        "license": { "type": "string", "minLength": 1, "maxLength": 240 },
+        "copyright_owner": { "type": "string", "maxLength": 240 },
+        "redistribution_allowed": { "type": "boolean" },
+        "attribution": { "type": "string", "maxLength": 1000 },
+        "source_terms_uri": { "type": "string", "format": "uri" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "redistribution_allowed": { "const": true } } },
+          "then": {
+            "required": ["license"],
+            "properties": { "rights_status": { "const": "cleared" } }
+          }
+        }
+      ]
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifact_id",
+        "artifact_type",
+        "uri",
+        "sha256",
+        "media_type",
+        "rights"
+      ],
+      "properties": {
+        "artifact_id": { "$ref": "#/$defs/id" },
+        "artifact_type": {
+          "enum": [
+            "timeseries",
+            "image",
+            "video",
+            "thermal",
+            "acoustic",
+            "command_log",
+            "configuration",
+            "model",
+            "geometry",
+            "report",
+            "other"
+          ]
+        },
+        "uri": { "type": "string", "format": "uri" },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "byte_length": { "type": "integer", "minimum": 0 },
+        "media_type": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "format_schema_ref": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["name", "version"],
+          "properties": {
+            "name": { "type": "string", "minLength": 1, "maxLength": 160 },
+            "version": { "type": "string", "minLength": 1, "maxLength": 80 },
+            "uri": { "type": "string", "format": "uri" },
+            "sha256": { "$ref": "#/$defs/sha256" }
+          }
+        },
+        "temporal": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["timebase"],
+          "properties": {
+            "start_time": { "type": "string", "format": "date-time" },
+            "end_time": { "type": "string", "format": "date-time" },
+            "timebase": { "type": "string", "minLength": 1, "maxLength": 160 },
+            "clock_ref": { "$ref": "#/$defs/id" },
+            "clock_offset_s": { "type": "number" },
+            "sampling_rate_hz": { "type": "number", "exclusiveMinimum": 0 }
+          }
+        },
+        "sensor_ref": { "$ref": "#/$defs/id" },
+        "calibration_ref": { "$ref": "#/$defs/id" },
+        "coordinate_frame": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["frame_id"],
+          "properties": {
+            "frame_id": { "$ref": "#/$defs/id" },
+            "definition_ref": { "$ref": "#/$defs/id" },
+            "units": {
+              "type": "array",
+              "items": { "type": "string", "minLength": 1, "maxLength": 60 }
+            }
+          }
+        },
+        "derived_from_artifact_refs": { "$ref": "#/$defs/idArray" },
+        "derivation_method_ref": { "$ref": "#/$defs/id" },
+        "rights": { "$ref": "#/$defs/rights" },
+        "visibility_override": {
+          "enum": ["inherit", "private", "team", "restricted", "public"]
+        }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "artifact_type": { "const": "timeseries" } } },
+          "then": { "required": ["format_schema_ref", "temporal", "sensor_ref"] }
+        },
+        {
+          "if": {
+            "required": ["visibility_override"],
+            "properties": { "visibility_override": { "const": "public" } }
+          },
+          "then": {
+            "properties": {
+              "rights": {
+                "required": ["license"],
+                "properties": {
+                  "rights_status": { "const": "cleared" },
+                  "redistribution_allowed": { "const": true }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["visibility", "public_release", "rights_status", "consent"],
+      "properties": {
+        "visibility": {
+          "enum": ["private", "team", "restricted", "public"],
+          "description": "Metadata release classification. It does not itself grant access to referenced payloads."
+        },
+        "public_release": { "type": "boolean" },
+        "rights_status": { "enum": ["cleared", "restricted", "unknown"] },
+        "license": { "type": "string", "minLength": 1, "maxLength": 240 },
+        "consent": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["public_sharing", "model_training"],
+          "properties": {
+            "public_sharing": { "type": "boolean" },
+            "model_training": { "type": "boolean" },
+            "recorded_at": { "type": "string", "format": "date-time" },
+            "basis": { "type": "string", "minLength": 1, "maxLength": 240 }
+          },
+          "allOf": [
+            {
+              "if": {
+                "anyOf": [
+                  { "properties": { "public_sharing": { "const": true } } },
+                  { "properties": { "model_training": { "const": true } } }
+                ]
+              },
+              "then": { "required": ["recorded_at", "basis"] }
+            }
+          ]
+        },
+        "retention_until": { "type": ["string", "null"], "format": "date-time" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "public_release": { "const": true } } },
+          "then": {
+            "required": ["license"],
+            "properties": {
+              "visibility": { "const": "public" },
+              "rights_status": { "const": "cleared" },
+              "consent": {
+                "properties": { "public_sharing": { "const": true } }
+              }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "visibility": { "const": "public" } } },
+          "then": {
+            "required": ["license"],
+            "properties": {
+              "public_release": { "const": true },
+              "rights_status": { "const": "cleared" },
+              "consent": {
+                "properties": { "public_sharing": { "const": true } }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["created_by", "sources"],
+      "properties": {
+        "created_by": { "$ref": "#/$defs/id" },
+        "sources": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/sourceRef" }
+        },
+        "derived_from_ids": { "$ref": "#/$defs/idArray" }
+      }
+    },
+    "crosswalk": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "target_standard",
+        "target_version",
+        "mapping_class",
+        "mapping_artifact_ref"
+      ],
+      "properties": {
+        "target_standard": { "type": "string", "minLength": 1 },
+        "target_version": { "type": "string", "minLength": 1 },
+        "mapping_class": {
+          "enum": ["exact", "normalized", "derived", "partial", "sidecar", "no_map"]
+        },
+        "mapping_artifact_ref": { "$ref": "#/$defs/artifactRef" },
+        "information_loss": { "type": "string", "minLength": 1, "maxLength": 1000 }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "mapping_class": { "enum": ["partial", "sidecar", "no_map"] }
+            }
+          },
+          "then": { "required": ["information_loss"] }
+        }
+      ]
+    },
+    "extensions": {
+      "type": "object",
+      "propertyNames": { "pattern": "^(https://|urn:)" },
+      "additionalProperties": true
+    }
+  }
+}

@@ -1,7 +1,7 @@
 # Open3DPP v0.1.0 — field reference
 
 Generated from the canonical definition (one table: name, type, unit, doc). 
-150 columns in 8 blocks. Unknown = NULL, never invented.
+152 columns in 8 blocks. Unknown = NULL, never invented.
 
 
 ## identity (19)
@@ -56,7 +56,7 @@ Generated from the canonical definition (one table: name, type, unit, doc).
 | `solvent_class` | str | — | Dissolution medium: water \| ipa \| limonene \| other. NULL means insoluble/unknown, so no separate is_soluble flag. Enum: `water` \| `ipa` \| `limonene` \| `other`. |
 | `trait_tags` | list[str] | — | Controlled non-filler, non-promoted traits (optical, functional, safety, end-of-life). See TRAIT_TAGS and PROMOTED_TRAITS — a trait appears in exactly one place. Safety and functional tags record a claim published by the source or vendor verbatim; they are never inferred, tested or verified here, and carrying one is not a representation of fitness for any purpose. |
 
-## process (35)
+## process (37)
 
 | Column | Type | Unit | Description |
 |---|---|---|---|
@@ -70,6 +70,8 @@ Generated from the canonical definition (one table: name, type, unit, doc).
 | `max_chamber_temperature_c` | float | degC | Chamber range high. |
 | `chamber_temperature_c` | float | degC | OpenPrintTag key 41 — chosen/ideal chamber point. The Orca/Bambu family writes 0 to mean 'no chamber / unset'; that sentinel is dropped at ingest rather than published as an ideal 0 degC chamber. |
 | `preheat_temperature_c` | float | degC | OpenPrintTag key 36. |
+| `first_layer_print_temperature_c` | float | degC | Nozzle temperature for the FIRST layer, which vendors commonly raise above the bulk value for adhesion. Distinct from print_temperature_c; absent means the source stated one temperature, not that the two are equal. |
+| `first_layer_bed_temperature_c` | float | degC | Bed temperature for the FIRST layer, commonly raised above the bulk value. Distinct from bed_temperature_c; absent means the source stated one temperature. |
 | `standby_temperature_c` | float | degC | Idle/standby nozzle temperature during tool changes (Cura 'standby temperature', Orca/Prusa idle_temperature). |
 | `flow_temp_graph` | list[list[float]] | [[mm3/s,degC]] | Required nozzle temperature as a FUNCTION of volumetric flow, as [[flow, temp], ...]. The only constitutive relation carried by consumer formats (Cura 'processing temperature graph', OrcaSlicer material_flow_temp_graph). The curve is machine-scoped upstream and is NOT bounded by min/max_print_temperature_c — it routinely extends past both ends, so the two must not be reconciled against each other. |
 | `nozzle_diameter_mm` | float | mm | As-run nozzle diameter. |

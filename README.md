@@ -5,10 +5,11 @@ Technologies. The schema may change before v1.0. No standards-body affiliation, 
 conformance certification, is implied.</em></p>
 <p align="center">
   <a href="Open3DPP_SCHEMA.md">Schema Reference</a> ·
-  <a href="FIELDS.md">Field Table (150 columns)</a> ·
+  <a href="FIELDS.md">Field Table (152 columns)</a> ·
   <a href="schemas/core/v0.1.0/open3dpp-record.schema.json">JSON Schema</a> ·
   <a href="examples/">Examples</a> ·
   <a href="CHANGELOG.md">Changelog</a> ·
+  <a href="ADDENDUM.md">Addendum</a> ·
   <a href="CONTRIBUTING.md">Contributing</a>
 </p>
 
@@ -48,13 +49,13 @@ size / thermal mass → cooling rate → crystallinity; orientation → anisotro
 format structurally cannot carry this, which is why Open3DPP exists alongside spool-tag
 formats.
 
-## Blocks (150 columns)
+## Blocks (152 columns)
 
 | Block | Cols | Purpose |
 |---|--:|---|
 | **A. Identity** | 19 | brand/material/variant ids, GTIN/SKU, colour, vendor-GUID alias, lifecycle |
 | **B. Composition** | 23 | density, Tg/Tm/softening, crystallinity, filler, hardness, adhesion descriptors, solubility, controlled trait tags |
-| **C. Process** | 35 | print conditions — every temperature as a **min/max range**, flow→temperature graph, material-side hardware requirements, shrinkage |
+| **C. Process** | 37 | print conditions — every temperature as a **min/max range**, flow→temperature graph, material-side hardware requirements, shrinkage |
 | **D. Geometry** | 18 | specimen standard/dims, orientation, raster, layer count, layer-time & thermal-mass proxies |
 | **E. Structure** | 8 | as-printed density, void fraction, degree-of-healing, measured crystallinity, fiber alignment |
 | **F. Properties** | 17 | tensile/flexural/impact/interlayer-Z/HDT — each with a paired stddev |
@@ -117,9 +118,10 @@ Absent means unknown: omit a field rather than filling it with a zero or a guess
 ## What Open3DPP deliberately does not carry
 
 - **Equipment/environment records** — exact system identity, components, calibration and
-  environment time series are out of scope here. They are addressed by a planned *Applied-System
-  Addendum* of linked JSON sidecars that reference a core record. That addendum is **not yet
-  published**; this repository does not depend on it.
+  environment time series are out of scope for a core record. They are carried by the
+  [Applied-System Addendum](ADDENDUM.md): linked JSON sidecars that reference a core record via
+  `core_record_ref`. The core carries no back-link and does not depend on the addendum, so a
+  record is complete without one.
 - **Compatibility matrices** (material × printer × hotend) — a different cardinality; the
   material-side constraints (`min_nozzle_diameter_mm`, `required_nozzle_hrc`, `is_abrasive`)
   are carried here.

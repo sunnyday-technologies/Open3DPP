@@ -1,0 +1,107 @@
+{
+  "schema_version": "0.1.0",
+  "bundle_id": "measurement-bundle-demo-01",
+  "revision": "r1",
+  "created_at": "2026-07-30T18:05:00Z",
+  "context_ref": {
+    "context_id": "ctx-demo-petg-0001",
+    "revision": "r1"
+  },
+  "results": [
+    {
+      "result_id": "result-demo-measured-01",
+      "subject_id": "specimen-demo-01",
+      "property": "mass",
+      "result_origin": "measured",
+      "value": {
+        "value": 12.4,
+        "unit": "g"
+      },
+      "timestamp": "2026-07-30T17:55:00Z",
+      "specimen_state": "as printed, laboratory ambient",
+      "method_ref": "method-demo-mass-01",
+      "instrument_ref": "instrument-demo-balance-01",
+      "calibration_ref": "calibration-demo-balance-01",
+      "actor_ref": "actor-demo-operator-01",
+      "uncertainty": {
+        "value": 0.1,
+        "unit": "g",
+        "coverage_basis": "Synthetic example only."
+      },
+      "replicate_index": 1,
+      "n_specimens": 1,
+      "raw_artifact_refs": ["artifact-balance-export-demo"],
+      "evidence_grade": "controlled_matching_system"
+    },
+    {
+      "result_id": "result-demo-predicted-01",
+      "subject_id": "specimen-demo-01",
+      "property": "illustrative_quality_score",
+      "result_origin": "predicted",
+      "value": {
+        "value": 0.7,
+        "unit": "1"
+      },
+      "timestamp": "2026-07-30T17:04:00Z",
+      "evidence_grade": "unverified_report",
+      "prediction_lineage": {
+        "model_id": "model-demo-01",
+        "model_version": "r1",
+        "input_context_ref": "ctx-demo-petg-0001",
+        "generated_at": "2026-07-30T17:04:00Z",
+        "applicability_statement": "Synthetic fixture; not validated and not a recommendation."
+      }
+    }
+  ],
+  "outcome_receipt_ref": {
+    "receipt_id": "outcome-receipt-demo-01",
+    "schema_id": "https://paramat3d.com/outcome-receipt.schema.json",
+    "schema_version": "1.0.0",
+    "uri": "https://example.org/private/outcomes/outcome-receipt-demo-01.json"
+  },
+  "outcome_summary": {
+    "status": "success",
+    "recorded_at": "2026-07-30T18:00:00Z",
+    "disposition": "requires_additional_validation"
+  },
+  "governance": {
+    "visibility": "private",
+    "public_release": false,
+    "rights_status": "restricted",
+    "consent": {
+      "public_sharing": false,
+      "model_training": false,
+      "recorded_at": "2026-07-30T18:00:00Z",
+      "basis": "Synthetic fixture remains private by default."
+    },
+    "retention_until": null
+  },
+  "provenance": {
+    "created_by": "actor-demo-operator-01",
+    "sources": [
+      {
+        "source_id": "fixture-source",
+        "uri": "https://example.org/open3dpp-fixtures",
+        "revision": "r1",
+        "rights_status": "restricted"
+      }
+    ],
+    "derived_from_ids": []
+  },
+  "external_crosswalks": [
+    {
+      "target_standard": "GEMD",
+      "target_version": "unspecified",
+      "mapping_class": "sidecar",
+      "mapping_artifact_ref": {
+        "artifact_id": "crosswalk-demo-gemd"
+      },
+      "information_loss": "The fixture does not instantiate the complete target graph or material history."
+    }
+  ],
+  "extensions": {
+    "urn:open3dpp:example": {
+      "fixture": true
+    }
+  }
+}

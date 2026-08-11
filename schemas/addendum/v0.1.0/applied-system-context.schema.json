@@ -1,0 +1,509 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://open3dpp.org/schemas/addendum/v0.1.0/applied-system-context.schema.json",
+  "title": "Open3DPP Applied-System Context",
+  "description": "Linked equipment, material, process, environment, people, and QMS context. It does not change the Open3DPP or Open3DCP core.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "context_id",
+    "revision",
+    "created_at",
+    "context_kind",
+    "core_record_ref",
+    "material_stock",
+    "system",
+    "process",
+    "environment",
+    "qms",
+    "governance",
+    "provenance"
+  ],
+  "properties": {
+    "schema_version": { "const": "0.1.0" },
+    "context_id": { "$ref": "#/$defs/id" },
+    "revision": { "$ref": "#/$defs/revision" },
+    "created_at": { "type": "string", "format": "date-time" },
+    "context_kind": { "enum": ["specification", "run"] },
+    "core_record_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["standard", "schema_version", "record_id"],
+      "properties": {
+        "standard": { "enum": ["Open3DPP", "Open3DCP"] },
+        "schema_version": { "type": "string", "minLength": 1 },
+        "record_id": { "$ref": "#/$defs/id" },
+        "uri": { "type": "string", "format": "uri" },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "project": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "project_id": { "$ref": "#/$defs/id" },
+        "organization_id": { "$ref": "#/$defs/id" },
+        "design_artifact_refs": { "$ref": "#/$defs/idArray" },
+        "objective": { "type": "string", "maxLength": 500 }
+      }
+    },
+    "material_stock": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["stock_id", "material_identity", "state"],
+      "properties": {
+        "stock_id": { "$ref": "#/$defs/id" },
+        "material_identity": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["name", "source"],
+          "properties": {
+            "name": { "type": "string", "minLength": 1, "maxLength": 240 },
+            "manufacturer": { "type": "string", "maxLength": 160 },
+            "family": { "type": "string", "maxLength": 80 },
+            "source": { "$ref": "#/$defs/sourceRef" }
+          }
+        },
+        "lot_id": { "type": "string", "maxLength": 160 },
+        "custody_refs": { "$ref": "#/$defs/idArray" },
+        "state": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["moisture_state"],
+          "properties": {
+            "moisture_state": {
+              "enum": ["unknown", "as_received", "dried", "conditioned", "measured"]
+            },
+            "drying": { "$ref": "#/$defs/artifactRef" },
+            "storage": { "$ref": "#/$defs/artifactRef" },
+            "measured_moisture": { "$ref": "#/$defs/quantity" },
+            "reuse_or_regrind_state": { "type": "string", "maxLength": 160 },
+            "contamination_state": { "type": "string", "maxLength": 160 }
+          }
+        }
+      }
+    },
+    "system": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "system_id",
+        "manufacturer",
+        "model",
+        "revision",
+        "system_fingerprint",
+        "components"
+      ],
+      "properties": {
+        "system_id": { "$ref": "#/$defs/id" },
+        "manufacturer": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "model": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "revision": { "$ref": "#/$defs/revision" },
+        "unit_ref": {
+          "type": "string",
+          "maxLength": 160,
+          "description": "Opaque private unit reference. Direct identifiers and serial numbers are excluded from public records and fingerprints."
+        },
+        "system_fingerprint": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "algorithm",
+            "canonicalization",
+            "schema_version",
+            "scope",
+            "direct_identifiers_included",
+            "included_field_paths",
+            "sha256"
+          ],
+          "properties": {
+            "algorithm": { "const": "SHA-256" },
+            "canonicalization": { "const": "JCS/RFC8785" },
+            "schema_version": { "$ref": "#/$defs/revision" },
+            "scope": { "enum": ["configuration_class", "private_unit"] },
+            "direct_identifiers_included": { "const": false },
+            "included_field_paths": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": { "type": "string", "minLength": 1, "maxLength": 240 }
+            },
+            "sha256": { "$ref": "#/$defs/sha256" }
+          },
+          "description": "SHA-256 of the declared field-path projection after JCS/RFC8785 canonicalization. Direct personal and unit identifiers are excluded."
+        },
+        "components": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["component_id", "component_type", "revision"],
+            "properties": {
+              "component_id": { "$ref": "#/$defs/id" },
+              "component_type": {
+                "enum": [
+                  "controller",
+                  "extruder",
+                  "hotend",
+                  "nozzle",
+                  "build_surface",
+                  "enclosure",
+                  "material_path",
+                  "sensor",
+                  "other"
+                ]
+              },
+              "manufacturer": { "type": "string", "maxLength": 160 },
+              "model": { "type": "string", "maxLength": 160 },
+              "revision": { "$ref": "#/$defs/revision" },
+              "material": { "type": "string", "maxLength": 120 },
+              "geometry": { "type": "object" },
+              "capabilities": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["property", "limit", "basis"],
+                  "properties": {
+                    "property": { "type": "string", "minLength": 1 },
+                    "limit": { "$ref": "#/$defs/quantity" },
+                    "basis": { "type": "string", "minLength": 1, "maxLength": 300 },
+                    "source_ref": { "$ref": "#/$defs/sourceRef" }
+                  }
+                }
+              },
+              "calibration_refs": { "$ref": "#/$defs/idArray" },
+              "maintenance_refs": { "$ref": "#/$defs/idArray" }
+            }
+          }
+        },
+        "software": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["software_id", "role", "name", "version"],
+            "properties": {
+              "software_id": { "$ref": "#/$defs/id" },
+              "role": { "enum": ["firmware", "slicer", "controller", "analysis", "other"] },
+              "name": { "type": "string", "minLength": 1 },
+              "version": { "type": "string", "minLength": 1 },
+              "configuration_artifact_ref": { "$ref": "#/$defs/artifactRef" }
+            }
+          }
+        }
+      }
+    },
+    "process": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["planned"],
+      "properties": {
+        "planned": { "$ref": "#/$defs/processState" },
+        "actual": { "$ref": "#/$defs/processState" }
+      }
+    },
+    "environment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["summary"],
+      "properties": {
+        "summary": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "ambient_temperature": { "$ref": "#/$defs/quantity" },
+            "relative_humidity": { "$ref": "#/$defs/quantity" },
+            "chamber_temperature": { "$ref": "#/$defs/quantity" },
+            "material_temperature": { "$ref": "#/$defs/quantity" },
+            "pressure": { "$ref": "#/$defs/quantity" },
+            "airflow": { "$ref": "#/$defs/quantity" }
+          }
+        },
+        "timeseries_artifact_refs": { "$ref": "#/$defs/idArray" },
+        "location_class": {
+          "enum": ["unspecified", "indoor_uncontrolled", "indoor_controlled", "outdoor"],
+          "description": "Exact location is intentionally not required."
+        }
+      }
+    },
+    "actors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["actor_id", "role"],
+        "properties": {
+          "actor_id": { "$ref": "#/$defs/id" },
+          "role": { "type": "string", "minLength": 1, "maxLength": 120 },
+          "organization_id": { "$ref": "#/$defs/id" },
+          "qualification_refs": { "$ref": "#/$defs/idArray" }
+        }
+      }
+    },
+    "qms": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["fishbone_refs"],
+      "properties": {
+        "fishbone_refs": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "material": { "$ref": "#/$defs/idArray" },
+            "machine": { "$ref": "#/$defs/idArray" },
+            "method": { "$ref": "#/$defs/idArray" },
+            "measurement": { "$ref": "#/$defs/idArray" },
+            "environment": { "$ref": "#/$defs/idArray" },
+            "people": { "$ref": "#/$defs/idArray" },
+            "design": { "$ref": "#/$defs/idArray" },
+            "management_quality": { "$ref": "#/$defs/idArray" }
+          }
+        },
+        "fmea_ref": { "$ref": "#/$defs/artifactRef" },
+        "control_plan_ref": { "$ref": "#/$defs/artifactRef" },
+        "deviation_refs": { "$ref": "#/$defs/idArray" },
+        "nonconformance_capa_refs": { "$ref": "#/$defs/idArray" },
+        "approval_refs": { "$ref": "#/$defs/idArray" }
+      }
+    },
+    "governance": { "$ref": "#/$defs/governance" },
+    "provenance": { "$ref": "#/$defs/provenance" },
+    "external_crosswalks": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/crosswalk" }
+    },
+    "extensions": { "$ref": "#/$defs/extensions" }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "context_kind": { "const": "run" } } },
+      "then": {
+        "properties": {
+          "process": { "required": ["planned", "actual"] }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "governance": {
+            "properties": { "visibility": { "const": "public" } }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "system": {
+            "not": { "required": ["unit_ref"] },
+            "properties": {
+              "system_fingerprint": {
+                "properties": { "scope": { "const": "configuration_class" } }
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "id": { "type": "string", "minLength": 1, "maxLength": 240 },
+    "revision": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,79}$" },
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "idArray": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/id" }
+    },
+    "quantity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["value", "unit"],
+      "properties": {
+        "value": { "type": "number" },
+        "unit": { "type": "string", "minLength": 1, "maxLength": 60 },
+        "uncertainty": { "type": "number", "minimum": 0 }
+      }
+    },
+    "artifactRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact_id"],
+      "properties": {
+        "artifact_id": { "$ref": "#/$defs/id" },
+        "uri": { "type": "string", "format": "uri" },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "sourceRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_id", "revision", "rights_status"],
+      "properties": {
+        "source_id": { "$ref": "#/$defs/id" },
+        "uri": { "type": "string", "format": "uri" },
+        "revision": { "$ref": "#/$defs/revision" },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "rights_status": { "enum": ["cleared", "restricted", "unknown"] },
+        "license": { "type": "string", "minLength": 1, "maxLength": 240 }
+      }
+    },
+    "processState": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["process_id", "revision", "settings"],
+      "properties": {
+        "process_id": { "$ref": "#/$defs/id" },
+        "revision": { "$ref": "#/$defs/revision" },
+        "base_profile_ref": { "$ref": "#/$defs/artifactRef" },
+        "settings": { "type": "object" },
+        "steps": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["sequence", "step_type"],
+            "properties": {
+              "sequence": { "type": "integer", "minimum": 0 },
+              "step_type": { "type": "string", "minLength": 1, "maxLength": 120 },
+              "started_at": { "type": "string", "format": "date-time" },
+              "ended_at": { "type": "string", "format": "date-time" },
+              "input_refs": { "$ref": "#/$defs/idArray" },
+              "output_refs": { "$ref": "#/$defs/idArray" }
+            }
+          }
+        },
+        "interventions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["timestamp", "actor_id", "description"],
+            "properties": {
+              "timestamp": { "type": "string", "format": "date-time" },
+              "actor_id": { "$ref": "#/$defs/id" },
+              "description": { "type": "string", "maxLength": 500 }
+            }
+          }
+        }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["visibility", "public_release", "rights_status", "consent"],
+      "properties": {
+        "visibility": {
+          "enum": ["private", "team", "restricted", "public"],
+          "description": "Metadata release classification. It does not itself grant access to referenced payloads."
+        },
+        "public_release": { "type": "boolean" },
+        "rights_status": { "enum": ["cleared", "restricted", "unknown"] },
+        "license": { "type": "string", "minLength": 1, "maxLength": 240 },
+        "consent": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["public_sharing", "model_training"],
+          "properties": {
+            "public_sharing": { "type": "boolean" },
+            "model_training": { "type": "boolean" },
+            "recorded_at": { "type": "string", "format": "date-time" },
+            "basis": { "type": "string", "minLength": 1, "maxLength": 240 }
+          },
+          "allOf": [
+            {
+              "if": {
+                "anyOf": [
+                  { "properties": { "public_sharing": { "const": true } } },
+                  { "properties": { "model_training": { "const": true } } }
+                ]
+              },
+              "then": { "required": ["recorded_at", "basis"] }
+            }
+          ]
+        },
+        "retention_until": { "type": ["string", "null"], "format": "date-time" },
+        "jurisdiction": { "type": "string", "maxLength": 120 }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "public_release": { "const": true } } },
+          "then": {
+            "required": ["license"],
+            "properties": {
+              "visibility": { "const": "public" },
+              "rights_status": { "const": "cleared" },
+              "consent": {
+                "properties": { "public_sharing": { "const": true } }
+              }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "visibility": { "const": "public" } } },
+          "then": {
+            "required": ["license"],
+            "properties": {
+              "public_release": { "const": true },
+              "rights_status": { "const": "cleared" },
+              "consent": {
+                "properties": { "public_sharing": { "const": true } }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["created_by", "sources"],
+      "properties": {
+        "created_by": { "$ref": "#/$defs/id" },
+        "sources": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/sourceRef" }
+        },
+        "derived_from_ids": { "$ref": "#/$defs/idArray" },
+        "transformation_ref": { "$ref": "#/$defs/artifactRef" }
+      }
+    },
+    "crosswalk": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "target_standard",
+        "target_version",
+        "mapping_class",
+        "mapping_artifact_ref"
+      ],
+      "properties": {
+        "target_standard": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "target_version": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "target_schema_sha256": { "$ref": "#/$defs/sha256" },
+        "mapping_class": {
+          "enum": ["exact", "normalized", "derived", "partial", "sidecar", "no_map"]
+        },
+        "mapping_artifact_ref": { "$ref": "#/$defs/artifactRef" },
+        "information_loss": { "type": "string", "minLength": 1, "maxLength": 1000 }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "mapping_class": { "enum": ["partial", "sidecar", "no_map"] }
+            }
+          },
+          "then": { "required": ["information_loss"] }
+        }
+      ]
+    },
+    "extensions": {
+      "type": "object",
+      "propertyNames": { "pattern": "^(https://|urn:)" },
+      "additionalProperties": true
+    }
+  }
+}

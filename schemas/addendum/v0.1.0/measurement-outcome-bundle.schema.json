@@ -1,0 +1,342 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://open3dpp.org/schemas/addendum/v0.1.0/measurement-outcome-bundle.schema.json",
+  "title": "Open3DPP Measurement and Outcome Bundle",
+  "description": "Repeatable results and an outcome receipt with explicit measured, predicted, calculated, or reported origin.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "bundle_id",
+    "revision",
+    "created_at",
+    "context_ref",
+    "results",
+    "outcome_receipt_ref",
+    "governance",
+    "provenance"
+  ],
+  "properties": {
+    "schema_version": { "const": "0.1.0" },
+    "bundle_id": { "$ref": "#/$defs/id" },
+    "revision": { "$ref": "#/$defs/revision" },
+    "created_at": { "type": "string", "format": "date-time" },
+    "context_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["context_id", "revision"],
+      "properties": {
+        "context_id": { "$ref": "#/$defs/id" },
+        "revision": { "$ref": "#/$defs/revision" },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "results": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/result" }
+    },
+    "outcome_receipt_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["receipt_id", "schema_id", "schema_version"],
+      "properties": {
+        "receipt_id": { "$ref": "#/$defs/id" },
+        "schema_id": { "const": "https://paramat3d.com/outcome-receipt.schema.json" },
+        "schema_version": { "const": "1.0.0" },
+        "uri": { "type": "string", "format": "uri" },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      },
+      "description": "Reference to an external outcome-receipt document, identified by its own schema URL and version. The receipt body is validated by that schema, not by this one; no particular receipt provider is required."
+    },
+    "outcome_summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Optional non-canonical index summary. It never replaces the referenced outcome receipt.",
+      "required": ["status", "disposition"],
+      "properties": {
+        "status": { "enum": ["success", "partial", "failure", "aborted", "unknown"] },
+        "recorded_at": { "type": "string", "format": "date-time" },
+        "disposition": {
+          "enum": [
+            "not_reviewed",
+            "accepted",
+            "accepted_with_conditions",
+            "rejected",
+            "requires_additional_validation"
+          ]
+        }
+      }
+    },
+    "governance": { "$ref": "#/$defs/governance" },
+    "provenance": { "$ref": "#/$defs/provenance" },
+    "external_crosswalks": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/crosswalk" }
+    },
+    "extensions": { "$ref": "#/$defs/extensions" }
+  },
+  "$defs": {
+    "id": { "type": "string", "minLength": 1, "maxLength": 240 },
+    "revision": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,79}$" },
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "idArray": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/id" }
+    },
+    "artifactRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact_id"],
+      "properties": {
+        "artifact_id": { "$ref": "#/$defs/id" },
+        "uri": { "type": "string", "format": "uri" },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "quantity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["value", "unit"],
+      "properties": {
+        "value": { "type": "number" },
+        "unit": { "type": "string", "minLength": 1, "maxLength": 60 }
+      }
+    },
+    "sourceRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_id", "revision", "rights_status"],
+      "properties": {
+        "source_id": { "$ref": "#/$defs/id" },
+        "uri": { "type": "string", "format": "uri" },
+        "revision": { "$ref": "#/$defs/revision" },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "rights_status": { "enum": ["cleared", "restricted", "unknown"] },
+        "license": { "type": "string", "minLength": 1, "maxLength": 240 }
+      }
+    },
+    "result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "result_id",
+        "subject_id",
+        "property",
+        "result_origin",
+        "value",
+        "timestamp",
+        "evidence_grade"
+      ],
+      "properties": {
+        "result_id": { "$ref": "#/$defs/id" },
+        "subject_id": { "$ref": "#/$defs/id" },
+        "property": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "result_origin": {
+          "enum": ["measured", "predicted", "calculated", "reported"]
+        },
+        "value": { "$ref": "#/$defs/quantity" },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "specimen_state": { "type": "string", "maxLength": 240 },
+        "method_ref": { "$ref": "#/$defs/id" },
+        "standard_ref": { "type": "string", "maxLength": 160 },
+        "instrument_ref": { "$ref": "#/$defs/id" },
+        "calibration_ref": { "$ref": "#/$defs/id" },
+        "actor_ref": { "$ref": "#/$defs/id" },
+        "source_ref": { "$ref": "#/$defs/sourceRef" },
+        "conditions": { "type": "object" },
+        "uncertainty": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["value", "unit", "coverage_basis"],
+          "properties": {
+            "value": { "type": "number", "minimum": 0 },
+            "unit": { "type": "string", "minLength": 1, "maxLength": 60 },
+            "coverage_basis": { "type": "string", "minLength": 1, "maxLength": 300 }
+          }
+        },
+        "replicate_index": { "type": "integer", "minimum": 0 },
+        "n_specimens": { "type": "integer", "minimum": 1 },
+        "raw_artifact_refs": { "$ref": "#/$defs/idArray" },
+        "evidence_grade": {
+          "enum": [
+            "controlled_matching_system",
+            "controlled_near_equivalent",
+            "standards_or_peer_reviewed",
+            "permissioned_observation",
+            "unverified_report"
+          ]
+        },
+        "prediction_lineage": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "model_id",
+            "model_version",
+            "input_context_ref",
+            "generated_at"
+          ],
+          "properties": {
+            "model_id": { "$ref": "#/$defs/id" },
+            "model_version": { "$ref": "#/$defs/revision" },
+            "input_context_ref": { "$ref": "#/$defs/id" },
+            "model_artifact_ref": { "$ref": "#/$defs/id" },
+            "generated_at": { "type": "string", "format": "date-time" },
+            "applicability_statement": { "type": "string", "maxLength": 1000 }
+          }
+        },
+        "calculation_lineage": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["method_id", "input_result_refs"],
+          "properties": {
+            "method_id": { "$ref": "#/$defs/id" },
+            "method_version": { "$ref": "#/$defs/revision" },
+            "input_result_refs": { "$ref": "#/$defs/idArray" }
+          }
+        },
+        "decision": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["rule_ref", "result"],
+          "properties": {
+            "rule_ref": { "$ref": "#/$defs/id" },
+            "result": { "enum": ["pass", "fail", "indeterminate", "not_applicable"] },
+            "approved_by_refs": { "$ref": "#/$defs/idArray" }
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "result_origin": { "const": "measured" } } },
+          "then": { "required": ["method_ref", "instrument_ref"] }
+        },
+        {
+          "if": { "properties": { "result_origin": { "const": "predicted" } } },
+          "then": { "required": ["prediction_lineage"] }
+        },
+        {
+          "if": { "properties": { "result_origin": { "const": "calculated" } } },
+          "then": { "required": ["calculation_lineage"] }
+        },
+        {
+          "if": { "properties": { "result_origin": { "const": "reported" } } },
+          "then": { "required": ["source_ref"] }
+        }
+      ]
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["visibility", "public_release", "rights_status", "consent"],
+      "properties": {
+        "visibility": {
+          "enum": ["private", "team", "restricted", "public"],
+          "description": "Metadata release classification. It does not itself grant access to referenced payloads."
+        },
+        "public_release": { "type": "boolean" },
+        "rights_status": { "enum": ["cleared", "restricted", "unknown"] },
+        "license": { "type": "string", "minLength": 1, "maxLength": 240 },
+        "consent": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["public_sharing", "model_training"],
+          "properties": {
+            "public_sharing": { "type": "boolean" },
+            "model_training": { "type": "boolean" },
+            "recorded_at": { "type": "string", "format": "date-time" },
+            "basis": { "type": "string", "minLength": 1, "maxLength": 240 }
+          },
+          "allOf": [
+            {
+              "if": {
+                "anyOf": [
+                  { "properties": { "public_sharing": { "const": true } } },
+                  { "properties": { "model_training": { "const": true } } }
+                ]
+              },
+              "then": { "required": ["recorded_at", "basis"] }
+            }
+          ]
+        },
+        "retention_until": { "type": ["string", "null"], "format": "date-time" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "public_release": { "const": true } } },
+          "then": {
+            "required": ["license"],
+            "properties": {
+              "visibility": { "const": "public" },
+              "rights_status": { "const": "cleared" },
+              "consent": {
+                "properties": { "public_sharing": { "const": true } }
+              }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "visibility": { "const": "public" } } },
+          "then": {
+            "required": ["license"],
+            "properties": {
+              "public_release": { "const": true },
+              "rights_status": { "const": "cleared" },
+              "consent": {
+                "properties": { "public_sharing": { "const": true } }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["created_by", "sources"],
+      "properties": {
+        "created_by": { "$ref": "#/$defs/id" },
+        "sources": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/sourceRef" }
+        },
+        "derived_from_ids": { "$ref": "#/$defs/idArray" }
+      }
+    },
+    "crosswalk": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "target_standard",
+        "target_version",
+        "mapping_class",
+        "mapping_artifact_ref"
+      ],
+      "properties": {
+        "target_standard": { "type": "string", "minLength": 1 },
+        "target_version": { "type": "string", "minLength": 1 },
+        "mapping_class": {
+          "enum": ["exact", "normalized", "derived", "partial", "sidecar", "no_map"]
+        },
+        "mapping_artifact_ref": { "$ref": "#/$defs/artifactRef" },
+        "information_loss": { "type": "string", "minLength": 1, "maxLength": 1000 }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "mapping_class": { "enum": ["partial", "sidecar", "no_map"] }
+            }
+          },
+          "then": { "required": ["information_loss"] }
+        }
+      ]
+    },
+    "extensions": {
+      "type": "object",
+      "propertyNames": { "pattern": "^(https://|urn:)" },
+      "additionalProperties": true
+    }
+  }
+}

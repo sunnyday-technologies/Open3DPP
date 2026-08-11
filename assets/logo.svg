@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-labelledby="title desc">
+  <title id="title">Open3DPP</title>
+  <desc id="desc">Open3DPP square mark with geometric display type and extruded bead layers</desc>
+  <rect x="40" y="40" width="432" height="432" rx="48" ry="48" fill="#060d14"/>
+  <rect x="62" y="62" width="388" height="388" rx="34" ry="34" fill="#0a2351" stroke="#1a3350" stroke-width="5"/>
+  <text x="256" y="150" text-anchor="middle" font-family="Orbitron, Raleway, Arial, sans-serif" font-weight="900" font-size="62" fill="#97d700" letter-spacing="2">OPEN</text>
+  <text x="256" y="220" text-anchor="middle" font-family="Orbitron, Raleway, Arial, sans-serif" font-weight="900" font-size="64" fill="#ffffff" letter-spacing="2">3DPP</text>
+  <!-- Extruded beads: rounded ends distinguish polymer road cross-sections
+       from the flat printed layers on the Open3DCP mark. -->
+  <rect x="100" y="340" width="312" height="38" rx="19" ry="19" fill="#ffffff"/>
+  <rect x="115" y="286" width="282" height="38" rx="19" ry="19" fill="#ffffff" opacity="0.86"/>
+  <rect x="130" y="232" width="252" height="38" rx="19" ry="19" fill="#ffffff" opacity="0.72"/>
+</svg>

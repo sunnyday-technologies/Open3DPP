@@ -1,0 +1,267 @@
+{
+  "schema_version": "0.1.0",
+  "context_id": "ctx-demo-petg-0001",
+  "revision": "r1",
+  "created_at": "2026-07-30T18:00:00Z",
+  "context_kind": "run",
+  "core_record_ref": {
+    "standard": "Open3DPP",
+    "schema_version": "0.1.0",
+    "record_id": "open3dpp-demo-material-0001"
+  },
+  "project": {
+    "project_id": "project-demo-0001",
+    "organization_id": "org-demo",
+    "design_artifact_refs": ["artifact-geometry-demo"],
+    "objective": "Demonstrate traceable context; values are illustrative and are not a print recommendation."
+  },
+  "material_stock": {
+    "stock_id": "stock-demo-petg-0001",
+    "material_identity": {
+      "name": "Demonstration PETG",
+      "manufacturer": "Example Manufacturer",
+      "family": "PETG",
+      "source": {
+        "source_id": "example-material-catalog",
+        "uri": "https://example.org/materials/demo-petg",
+        "revision": "2026-07-30",
+        "rights_status": "restricted"
+      }
+    },
+    "lot_id": "lot-demo-01",
+    "custody_refs": ["custody-event-demo-01"],
+    "state": {
+      "moisture_state": "dried",
+      "drying": {
+        "artifact_id": "artifact-drying-log-demo"
+      },
+      "storage": {
+        "artifact_id": "artifact-storage-log-demo"
+      },
+      "reuse_or_regrind_state": "virgin stock",
+      "contamination_state": "not observed"
+    }
+  },
+  "system": {
+    "system_id": "system-demo-printer-01",
+    "manufacturer": "Example Printer Manufacturer",
+    "model": "Example FFF Printer",
+    "revision": "hardware-r1",
+    "unit_ref": "private-unit-demo-01",
+    "system_fingerprint": {
+      "algorithm": "SHA-256",
+      "canonicalization": "JCS/RFC8785",
+      "schema_version": "r1",
+      "scope": "private_unit",
+      "direct_identifiers_included": false,
+      "included_field_paths": [
+        "/system/manufacturer",
+        "/system/model",
+        "/system/revision",
+        "/system/components",
+        "/system/software"
+      ],
+      "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+    },
+    "components": [
+      {
+        "component_id": "component-demo-hotend-01",
+        "component_type": "hotend",
+        "manufacturer": "Example Component Manufacturer",
+        "model": "Example Hotend",
+        "revision": "r1",
+        "capabilities": [
+          {
+            "property": "manufacturer_rated_temperature_limit",
+            "limit": {
+              "value": 300,
+              "unit": "Cel"
+            },
+            "basis": "Illustrative manufacturer limit; verify against the exact physical unit.",
+            "source_ref": {
+              "source_id": "example-equipment-manual",
+              "uri": "https://example.org/equipment/manual",
+              "revision": "r1",
+              "rights_status": "restricted"
+            }
+          }
+        ],
+        "calibration_refs": ["calibration-demo-hotend-01"],
+        "maintenance_refs": ["maintenance-demo-hotend-01"]
+      },
+      {
+        "component_id": "component-demo-nozzle-01",
+        "component_type": "nozzle",
+        "revision": "r1",
+        "material": "hardened steel",
+        "geometry": {
+          "nominal_diameter_mm": 0.4
+        }
+      },
+      {
+        "component_id": "component-demo-build-surface-01",
+        "component_type": "build_surface",
+        "revision": "r1",
+        "material": "textured polymer-coated plate"
+      }
+    ],
+    "software": [
+      {
+        "software_id": "software-demo-slicer-01",
+        "role": "slicer",
+        "name": "Example Slicer",
+        "version": "1.0",
+        "configuration_artifact_ref": {
+          "artifact_id": "artifact-profile-demo"
+        }
+      },
+      {
+        "software_id": "software-demo-firmware-01",
+        "role": "firmware",
+        "name": "Example Firmware",
+        "version": "1.0"
+      }
+    ]
+  },
+  "process": {
+    "planned": {
+      "process_id": "process-demo-plan-01",
+      "revision": "r1",
+      "base_profile_ref": {
+        "artifact_id": "artifact-profile-demo"
+      },
+      "settings": {
+        "source": "synthetic fixture",
+        "note": "No operational values are asserted by this fixture."
+      },
+      "steps": [
+        {
+          "sequence": 0,
+          "step_type": "material_conditioning",
+          "input_refs": ["stock-demo-petg-0001"],
+          "output_refs": ["stock-demo-petg-conditioned-0001"]
+        },
+        {
+          "sequence": 1,
+          "step_type": "print"
+        }
+      ]
+    },
+    "actual": {
+      "process_id": "process-demo-run-01",
+      "revision": "r1",
+      "base_profile_ref": {
+        "artifact_id": "artifact-profile-demo"
+      },
+      "settings": {
+        "source": "synthetic machine report",
+        "note": "Actual values are intentionally omitted rather than copied from the plan."
+      },
+      "steps": [
+        {
+          "sequence": 0,
+          "step_type": "material_conditioning",
+          "started_at": "2026-07-30T16:00:00Z",
+          "ended_at": "2026-07-30T17:00:00Z"
+        },
+        {
+          "sequence": 1,
+          "step_type": "print",
+          "started_at": "2026-07-30T17:05:00Z",
+          "ended_at": "2026-07-30T17:45:00Z"
+        }
+      ],
+      "interventions": [
+        {
+          "timestamp": "2026-07-30T17:10:00Z",
+          "actor_id": "actor-demo-operator-01",
+          "description": "Recorded an observation; no setting change."
+        }
+      ]
+    }
+  },
+  "environment": {
+    "summary": {
+      "ambient_temperature": {
+        "value": 23,
+        "unit": "Cel"
+      },
+      "relative_humidity": {
+        "value": 42,
+        "unit": "%"
+      }
+    },
+    "timeseries_artifact_refs": ["artifact-environment-timeseries-demo"],
+    "location_class": "indoor_uncontrolled"
+  },
+  "actors": [
+    {
+      "actor_id": "actor-demo-operator-01",
+      "role": "operator",
+      "organization_id": "org-demo",
+      "qualification_refs": ["qualification-demo-operator"]
+    }
+  ],
+  "qms": {
+    "fishbone_refs": {
+      "material": ["stock-demo-petg-0001"],
+      "machine": ["system-demo-printer-01"],
+      "method": ["process-demo-plan-01"],
+      "measurement": ["measurement-bundle-demo-01"],
+      "environment": ["artifact-environment-timeseries-demo"],
+      "people": ["actor-demo-operator-01"],
+      "design": ["artifact-geometry-demo"],
+      "management_quality": ["control-plan-demo-01"]
+    },
+    "fmea_ref": {
+      "artifact_id": "artifact-fmea-demo"
+    },
+    "control_plan_ref": {
+      "artifact_id": "artifact-control-plan-demo"
+    },
+    "deviation_refs": [],
+    "nonconformance_capa_refs": [],
+    "approval_refs": []
+  },
+  "governance": {
+    "visibility": "private",
+    "public_release": false,
+    "rights_status": "restricted",
+    "consent": {
+      "public_sharing": false,
+      "model_training": false,
+      "recorded_at": "2026-07-30T18:00:00Z",
+      "basis": "Synthetic fixture remains private by default."
+    },
+    "retention_until": null,
+    "jurisdiction": "unspecified"
+  },
+  "provenance": {
+    "created_by": "actor-demo-operator-01",
+    "sources": [
+      {
+        "source_id": "fixture-source",
+        "uri": "https://example.org/open3dpp-fixtures",
+        "revision": "r1",
+        "rights_status": "restricted"
+      }
+    ],
+    "derived_from_ids": []
+  },
+  "external_crosswalks": [
+    {
+      "target_standard": "AM-CDM",
+      "target_version": "unspecified",
+      "mapping_class": "partial",
+      "mapping_artifact_ref": {
+        "artifact_id": "crosswalk-demo-amcdm"
+      },
+      "information_loss": "Fixture records only a subset of the target system and manufacturing-process concepts."
+    }
+  ],
+  "extensions": {
+    "https://paramat3d.com/ns/example": {
+      "fixture": true
+    }
+  }
+}
