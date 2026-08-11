@@ -19,18 +19,16 @@ schema from the record's own `schema_version` instead:
 import json, urllib.request, jsonschema
 
 record = json.load(open("my-record.json"))
-# Resolve from the release tag matching the record's own schema_version. Tags
-# are immutable, so a pinned record keeps resolving the same bytes.
-url = ("https://raw.githubusercontent.com/sunnyday-technologies/Open3DPP"
-       "/v{v}/schemas/core/v{v}/open3dpp-record.schema.json").format(
-           v=record["schema_version"])
+# Resolve the schema named by the record's own schema_version.
+url = ("https://open3dpp.org/schemas/core/v%s/open3dpp-record.schema.json"
+       % record["schema_version"])
 schema = json.load(urllib.request.urlopen(url))
 jsonschema.validate(record, schema)
 ```
 
-The `$id` inside each schema (`https://open3dpp.org/schemas/core/v<version>/…`) is the stable
-identifier for that schema. It is **not currently served** — hosting is configured but not yet
-deployed — so resolve schemas from this repository, as above.
+Each schema's `$id` is both its identifier and its location: `open3dpp.org` serves this
+directory verbatim. A local clone works identically — the bytes are the same, and the release
+gate checks that they are.
 
 ## Permanence
 

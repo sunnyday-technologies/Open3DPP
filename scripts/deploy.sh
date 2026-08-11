@@ -77,20 +77,25 @@ say "Verify the identifier answers"
 # A deploy that does not make $id resolve has not done its job. This is the
 # same condition the release gate checks before it will let the docs claim the
 # schema resolves.
-if curl -fsS --max-time 20 "$SCHEMA_ID" -o /tmp/open3dpp-live.json 2>/dev/null &&
-   python -c "
-import json,sys
-want=sys.argv[1]
-got=json.load(open('/tmp/open3dpp-live.json',encoding='utf-8')).get('\$id')
-sys.exit(0 if got==want else 1)
+# Pipe straight into python: writing to /tmp and reading it back broke on
+# Windows, where Git Bash's /tmp and the Windows python's /tmp are different
+# directories, so the check reported a live site as unreachable.
+if curl -fsS --max-time 20 "$SCHEMA_ID" | python -c "
+import json, sys
+want = sys.argv[1]
+try:
+    got = json.load(sys.stdin).get('\$id')
+except Exception:
+    sys.exit(1)
+sys.exit(0 if got == want else 1)
 " "$SCHEMA_ID"; then
   echo "LIVE: $SCHEMA_ID returns its own schema"
   echo
-  echo "The docs may now state that the \$id resolves. Re-run the release gate"
-  echo "to confirm, then update the wording."
+  echo "The docs may now state that the \$id resolves; the release gate will"
+  echo "verify that claim by fetching it."
 else
   echo "NOT YET: $SCHEMA_ID did not return the schema."
-  echo "  - custom domain open3dpp.org attached to Pages project '$PROJECT'?"
-  echo "  - DNS propagated? (open3dpp.pages.dev should already answer)"
-  echo "The deploy itself succeeded; only the custom-domain mapping is missing."
+  echo "  - is the deployment above Production? a Preview never reaches the domain"
+  echo "  - is open3dpp.org attached to Pages project '$PROJECT'?"
+  echo "The upload itself succeeded; the site is reachable on its *.pages.dev URL."
 fi
