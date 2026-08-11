@@ -65,3 +65,26 @@ Sunnyday Technologies maintains the specification and decides what merges.
 There is no standards-body affiliation and no formal ratification process; the
 "Draft" status reflects that the schema is still changing, not that an external
 body is reviewing it.
+
+## Publishing the site (maintainers)
+
+`open3dpp.org` exists for one reason: to make every published schema `$id`
+resolve. A record names its schema
+`https://open3dpp.org/schemas/core/v<version>/open3dpp-record.schema.json`,
+which is exactly the repository path, so the site serves `schemas/` verbatim.
+
+```bash
+bash scripts/deploy.sh --dry-run   # build and check, upload nothing
+bash scripts/deploy.sh             # build, deploy, verify the $id answers
+```
+
+Authentication is your own `wrangler login`; no tokens live in this repository.
+
+The build refuses to publish if any `$id` disagrees with the path it would be
+served from — a site that deploys but serves schemas elsewhere still 404s every
+identifier we have published, which is worse than not deploying at all.
+
+**One-time setup:** attach the custom domain `open3dpp.org` to the Cloudflare
+Pages project `open3dpp`. Without it the deploy succeeds but answers only on
+`open3dpp.pages.dev`. `scripts/deploy.sh` checks this at the end and tells you
+which of the two states you are in.
