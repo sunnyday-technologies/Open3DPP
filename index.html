@@ -1,0 +1,60 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Open3DPP — Open Data Standard for FFF/FDM Polymer Printing</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Open3DPP is an open, flat characterization schema for FFF/FDM polymer materials: identity, composition, process conditions, part geometry, structure, mechanical properties, moisture response and provenance.">
+<link rel="canonical" href="https://open3dpp.org/">
+<style>
+  :root { color-scheme: light dark; }
+  body { max-width: 46rem; margin: 3rem auto; padding: 0 1.25rem; line-height: 1.6;
+         font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
+  code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .92em; }
+  pre { overflow-x: auto; padding: .8rem 1rem; border: 1px solid color-mix(in srgb, currentColor 20%, transparent); border-radius: 6px; }
+  h1 { margin-bottom: .2rem; } .sub { opacity: .75; margin-top: 0; }
+  table { border-collapse: collapse; width: 100%; } td, th { text-align: left; padding: .3rem .6rem .3rem 0; }
+  .note { opacity: .8; font-size: .93em; }
+</style>
+
+<h1>Open3DPP</h1>
+<p class="sub"><strong>Open Data Standard for FFF/FDM Polymer Printing</strong><br>
+Draft v0.1.0 — a community specification maintained by Sunnyday Technologies.
+No standards-body affiliation, and no conformance certification, is implied.</p>
+
+<p>One row = one <strong>characterization observation</strong> of an FFF polymer material:
+a settings card, a measured specimen, or a moisture response. 150 columns in 8 blocks,
+each with a name, a type, a unit and a purpose.</p>
+
+<p><strong>The repository is authoritative:</strong>
+<a href="https://github.com/sunnyday-technologies/Open3DPP">github.com/sunnyday-technologies/Open3DPP</a>.
+This site exists so that every published schema identifier resolves.</p>
+
+<h2>Schemas</h2>
+<table>
+  <tr><th>Version</th><th>Schema</th></tr>
+  <tr><td>v0.1.0 <em>(current)</em></td>
+      <td><a href="/schemas/core/v0.1.0/open3dpp-record.schema.json">/schemas/core/v0.1.0/open3dpp-record.schema.json</a></td></tr>
+</table>
+<p class="note">Schemas are <strong>version-exact</strong>: <code>schema_version</code> is pinned by
+<code>const</code> and unknown properties are rejected, so validate a record against the schema
+matching its own <code>schema_version</code>. Published schema artifacts are permanent from
+v0.1.0 onward — superseded by a new version, never rewritten in place.</p>
+
+<pre><code>check-jsonschema \
+  --schemafile https://open3dpp.org/schemas/core/v0.1.0/open3dpp-record.schema.json \
+  my-record.json</code></pre>
+
+<h2>Read next</h2>
+<ul>
+  <li><a href="https://github.com/sunnyday-technologies/Open3DPP/blob/main/FIELDS.md">Field reference</a> — all 150 columns</li>
+  <li><a href="https://github.com/sunnyday-technologies/Open3DPP/blob/main/Open3DPP_SCHEMA.md">Schema reference</a> — principles and boundaries</li>
+  <li><a href="/examples/">Example records</a></li>
+  <li><a href="https://github.com/sunnyday-technologies/Open3DPP/blob/main/research/cura-fdm-material-census/report.md">Format research</a></li>
+</ul>
+
+<p class="note"><strong>Disclaimer.</strong> Open3DPP is a data schema, not printing or engineering
+advice. Field semantics and example values are provided AS IS, without warranty of accuracy,
+completeness or fitness for a particular purpose. Records carry third-party data as published by
+their sources; no value is tested, verified, endorsed or certified here. Verify against the
+manufacturer's own documentation before use.</p>
+
+<p class="note">Apache-2.0 · Copyright 2026 Sunnyday Technologies LLC</p>

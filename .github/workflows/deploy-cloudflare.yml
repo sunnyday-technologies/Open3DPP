@@ -1,0 +1,42 @@
+name: Deploy to Cloudflare Pages
+
+# Serves open3dpp.org so that every published schema $id dereferences to the
+# bytes in this repository. A record declares schema_version 0.1.0 and names its
+# schema https://open3dpp.org/schemas/core/v0.1.0/open3dpp-record.schema.json,
+# which is exactly the repo path — the build copies schemas/ verbatim, and the
+# build script fails if any $id disagrees with the path it will be served from.
+#
+# INERT BY DEFAULT. This job is skipped until you opt in:
+#   1. Create the Pages project:  wrangler pages project create open3dpp
+#   2. Add repo secrets:          CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID
+#   3. Add repo variable:         CF_DEPLOY_ENABLED = true
+#   4. Point open3dpp.org at the Pages project in the Cloudflare dashboard.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
+jobs:
+  deploy:
+    if: ${{ vars.CF_DEPLOY_ENABLED == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Build web-only publish dir (allowlist + fail-loud tripwires)
+        shell: pwsh
+        run: ./scripts/build-site.ps1
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy .cloudflare/pages/open3dpp --project-name=open3dpp --branch=main

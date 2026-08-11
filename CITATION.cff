@@ -1,0 +1,33 @@
+cff-version: 1.2.0
+message: "If you use Open3DPP in your research or derivative work, please cite it as below."
+title: "Open3DPP: Open Data Standard for FFF/FDM Polymer Printing"
+abstract: >-
+  Open3DPP is an open data standard for FFF/FDM polymer 3D printing — a flat
+  characterization schema for recording material identity, composition, print
+  conditions (temperatures as ranges), part geometry as a first-class axis,
+  microstructural mediators, mechanical properties with per-property
+  uncertainty, moisture response, and provenance. One row is one observation:
+  a settings card, a measured specimen, or a moisture response.
+type: software
+authors:
+  - family-names: Sonnentag
+    given-names: Nicholas
+    email: nick@sunn3d.com
+    affiliation: Sunnyday Technologies
+    orcid: "https://orcid.org/0009-0002-1897-384X"
+version: 0.1.0
+date-released: 2026-08-11
+license: Apache-2.0
+repository-code: "https://github.com/sunnyday-technologies/Open3DPP"
+url: "https://open3dpp.org"
+keywords:
+  - FFF
+  - FDM
+  - 3D-printing
+  - polymer
+  - data-standard
+  - schema
+  - materials-science
+  - ICME
+  - open-data
+  - additive-manufacturing

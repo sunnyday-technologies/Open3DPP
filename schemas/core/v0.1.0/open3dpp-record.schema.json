@@ -1,0 +1,799 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://open3dpp.org/schemas/core/v0.1.0/open3dpp-record.schema.json",
+  "title": "Open3DPP Core Record",
+  "description": "One characterization observation of an FFF polymer material: a settings card, a measured specimen, or a moisture response. Unknown = absent/null, never invented; vendor claims are recorded as published and are not verified. Equipment, environment and QMS context are out of scope for this record and are addressed by a planned companion Applied-System Addendum (not yet published). VALIDATION POLICY: this schema is version-exact \u2014 it pins schema_version by const and is closed to unknown properties, so validate each record against the schema matching its own schema_version.",
+  "type": "object",
+  "required": [
+    "record_id",
+    "record_kind",
+    "schema_version",
+    "record_revision",
+    "record_created_at"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "record_id": {
+      "type": "string",
+      "description": "[identity] Our stable row id (uuid5 over the record's natural key)."
+    },
+    "material_uuid": {
+      "type": "string",
+      "description": "[identity] OpenPrintTag: deducible from brand_uuid + material_name."
+    },
+    "package_uuid": {
+      "type": "string",
+      "description": "[identity] OpenPrintTag: the physical package/spool instance."
+    },
+    "brand_uuid": {
+      "type": "string",
+      "description": "[identity] OpenPrintTag: the brand."
+    },
+    "variant_uuid": {
+      "type": "string",
+      "description": "[identity] Colour/finish variant identifier, for the variant level OFD models between filament and size. Despite the name it is an OPAQUE identifier, not necessarily a UUID: upstream databases key variants by slug (e.g. 'luminous_blue'), and those are recorded verbatim rather than hashed into a synthetic UUID that would break the join back to the source."
+    },
+    "gtin": {
+      "type": "string",
+      "description": "[identity] OpenPrintTag key 4 \u2014 barcode / free scan-in."
+    },
+    "sku": {
+      "type": "string",
+      "description": "[identity] Vendor stock code, when the vendor publishes one distinct from GTIN."
+    },
+    "brand_name": {
+      "type": "string",
+      "description": "[identity] OpenPrintTag key 11 (<=31 chars)."
+    },
+    "material_name": {
+      "type": "string",
+      "description": "[identity] OpenPrintTag key 10 (<=63 chars)."
+    },
+    "material_abbreviation": {
+      "type": "string",
+      "description": "[identity] OpenPrintTag key 52 (<=7) \u2014 carries our family when type unspecified."
+    },
+    "material_class": {
+      "type": "string",
+      "description": "[identity] OpenPrintTag key 8 \u2014 'FFF'."
+    },
+    "material_type": {
+      "type": "string",
+      "description": "[identity] OpenPrintTag key 9 enum abbreviation, or NULL (unspecified)."
+    },
+    "material_family": {
+      "type": "string",
+      "description": "[identity] Our controlled vocabulary (PLA/PETG/.../OTHER)."
+    },
+    "color_name": {
+      "type": "string",
+      "description": "[identity] Vendor's name for the colour/finish variant."
+    },
+    "color_hex": {
+      "type": "string",
+      "description": "[identity] A representative '#RRGGBB'. On a variant record it is that variant's colour. On an aggregate settings card it is one deterministically-chosen hex from the material's published variants and is NOT a designated primary \u2014 use a variant record when colour matters.",
+      "pattern": "^#[0-9a-fA-F]{6}$"
+    },
+    "vendor_material_guid": {
+      "type": "string",
+      "description": "[identity] NON-AUTHORITATIVE alias: the vendor/slicer-assigned GUID, e.g. the Cura fdm_material GUID element. Vendor-generated, one per profile file, and it folds diameter into identity \u2014 never join on it alone."
+    },
+    "lifecycle_status": {
+      "type": "string",
+      "description": "[identity] active | discontinued | unknown (see LIFECYCLE_STATUS). 'unknown' and an absent value mean the same thing; prefer absence, and use 'unknown' only to record that a source was consulted and did not say.",
+      "enum": [
+        "active",
+        "discontinued",
+        "unknown"
+      ]
+    },
+    "record_kind": {
+      "type": "string",
+      "description": "[identity] settings_card | measured_specimen | moisture_response (see RECORD_KINDS).",
+      "enum": [
+        "settings_card",
+        "measured_specimen",
+        "moisture_response"
+      ]
+    },
+    "schema_version": {
+      "type": "string",
+      "description": "[identity] Open3DPP schema version this row conforms to.",
+      "const": "0.1.0",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "base_polymer": {
+      "type": "string",
+      "description": "[composition] Neat resin designation, e.g. 'PLA', 'PA12'."
+    },
+    "filler_type": {
+      "type": "string",
+      "description": "[composition] AUTHORITATIVE for reinforcement: CF | GF | none | ... Reinforcement is never restated in trait_tags."
+    },
+    "filler_fraction_pct": {
+      "type": "number",
+      "description": "[composition] (%) Filler mass fraction.",
+      "minimum": 0
+    },
+    "density_g_cm3": {
+      "type": "number",
+      "description": "[composition] (g/cm3) OpenPrintTag key 29. Filament (not part) density.",
+      "minimum": 0
+    },
+    "glass_transition_c": {
+      "type": "number",
+      "description": "[composition] (degC) Tg, from datasheet. A KINETIC relaxation, not a thermodynamic transition: the value depends on method and rate, so keep it with its source and do not compare values obtained by different methods."
+    },
+    "melt_temperature_c": {
+      "type": "number",
+      "description": "[composition] (degC) Tm \u2014 crystalline melt, semi-crystalline grades only."
+    },
+    "softening_temperature_c": {
+      "type": "number",
+      "description": "[composition] (degC) VENDOR-DECLARED softening / vitrification point (OrcaSlicer temperature_vitrification). Distinct from Tg (thermodynamic) and hdt_c (standard load-deflection test); record whichever the source actually stated, never convert."
+    },
+    "is_semicrystalline": {
+      "type": "boolean",
+      "description": "[composition] Semi-crystalline (True) vs amorphous (False) as stated by a morphology source (datasheet or DSC). NOT a percentage \u2014 those are crystallinity_nominal_pct / _measured_pct. NOTE: Cura cura:material_crystallinity is NOT a valid source for this field. It governs filament-break behaviour during material-station unload and is only ever written true, so it can neither express nor evidence amorphousness."
+    },
+    "crystallinity_nominal_pct": {
+      "type": "number",
+      "description": "[composition] (%) Nominal/datasheet degree of crystallinity.",
+      "minimum": 0
+    },
+    "melt_flow_index_g_10min": {
+      "type": "number",
+      "description": "[composition] (g/10min) MFI/MFR. MEANINGLESS without its temperature and load (e.g. 190 degC / 2.16 kg). The schema has no column for them yet: record them in provenance_notes and do not compare values measured under different conditions.",
+      "minimum": 0
+    },
+    "shore_hardness_a": {
+      "type": "integer",
+      "description": "[composition] OpenPrintTag key 31 (flexibles).",
+      "minimum": 0
+    },
+    "shore_hardness_d": {
+      "type": "integer",
+      "description": "[composition] OpenPrintTag key 32 (rigids).",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "surface_energy_pct": {
+      "type": "number",
+      "description": "[composition] (%) Vendor-declared surface-energy index (Cura 'surface energy'). Ultimaker-only vocabulary; no OFD or Orca/Prusa equivalent.",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "adhesion_tendency_idx": {
+      "type": "integer",
+      "description": "[composition] Ordinal bed-adhesion propensity, 0..4 as published by Cura ('adhesion tendency'). Not comparable to Orca's filament_adhesiveness_category, which is a different scale.",
+      "minimum": 0,
+      "maximum": 4
+    },
+    "adhesion_note": {
+      "type": "string",
+      "description": "[composition] Vendor's free-text first-layer adhesion guidance, verbatim (Cura <adhesion_info>). Never parsed into a setting."
+    },
+    "break_temperature_c": {
+      "type": "number",
+      "description": "[composition] (degC) Temperature at which the filament fractures cleanly when pulled (Cura 'break temperature'). A thermal-mechanical observable, not a print setting."
+    },
+    "break_preparation_temperature_c": {
+      "type": "number",
+      "description": "[composition] (degC) Pre-conditioning temperature before the break move (Cura 'break preparation temperature')."
+    },
+    "neat_tensile_strength_mpa": {
+      "type": "number",
+      "description": "[composition] (MPa) Datasheet intrinsic for the bulk resin (not printed).",
+      "minimum": 0
+    },
+    "neat_modulus_mpa": {
+      "type": "number",
+      "description": "[composition] (MPa) Datasheet intrinsic for the bulk resin (not printed).",
+      "minimum": 0
+    },
+    "is_abrasive": {
+      "type": "boolean",
+      "description": "[composition] Abrades standard brass hardware. Promoted out of trait_tags because it gates hardware selection alongside required_nozzle_hrc."
+    },
+    "is_support_material": {
+      "type": "boolean",
+      "description": "[composition] Intended as a support/interface material (Cura material_is_support_material, Orca filament_is_support). Independent of solubility \u2014 breakaway supports are insoluble."
+    },
+    "solvent_class": {
+      "type": "string",
+      "description": "[composition] Dissolution medium: water | ipa | limonene | other. NULL means insoluble/unknown, so no separate is_soluble flag.",
+      "enum": [
+        "water",
+        "ipa",
+        "limonene",
+        "other"
+      ]
+    },
+    "trait_tags": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "translucent",
+          "transparent",
+          "matte",
+          "silk",
+          "glitter",
+          "iridescent",
+          "pearlescent",
+          "neon",
+          "glow",
+          "without_pigments",
+          "temperature_color_change",
+          "gradual_color_change",
+          "coextruded",
+          "illuminescent_color_change",
+          "imitates_wood",
+          "imitates_metal",
+          "imitates_marble",
+          "imitates_stone",
+          "lithophane",
+          "esd_safe",
+          "conductive",
+          "emi_shielding",
+          "paramagnetic",
+          "radiation_shielding",
+          "air_filtering",
+          "antibacterial",
+          "biocompatible",
+          "self_extinguishing",
+          "high_temperature",
+          "high_flow",
+          "low_outgassing",
+          "foaming",
+          "castable",
+          "blend",
+          "recycled",
+          "recyclable",
+          "biodegradable",
+          "home_compostable",
+          "industrially_compostable",
+          "bio_based",
+          "filtration_recommended",
+          "limited_edition"
+        ]
+      },
+      "description": "[composition] Controlled non-filler, non-promoted traits (optical, functional, safety, end-of-life). See TRAIT_TAGS and PROMOTED_TRAITS \u2014 a trait appears in exactly one place. Safety and functional tags record a claim published by the source or vendor verbatim; they are never inferred, tested or verified here, and carrying one is not a representation of fitness for any purpose.",
+      "uniqueItems": true
+    },
+    "min_print_temperature_c": {
+      "type": "number",
+      "description": "[process] (degC) OpenPrintTag key 34 \u2014 nozzle range low."
+    },
+    "max_print_temperature_c": {
+      "type": "number",
+      "description": "[process] (degC) OpenPrintTag key 35 \u2014 nozzle range high, as published by the source."
+    },
+    "print_temperature_c": {
+      "type": "number",
+      "description": "[process] (degC) Chosen/consensus nozzle point (goal-neutral)."
+    },
+    "min_bed_temperature_c": {
+      "type": "number",
+      "description": "[process] (degC) OpenPrintTag key 37."
+    },
+    "max_bed_temperature_c": {
+      "type": "number",
+      "description": "[process] (degC) OpenPrintTag key 38."
+    },
+    "bed_temperature_c": {
+      "type": "number",
+      "description": "[process] (degC) Chosen/consensus bed point. Present for symmetry with print_temperature_c; the range columns remain authoritative."
+    },
+    "min_chamber_temperature_c": {
+      "type": "number",
+      "description": "[process] (degC) Chamber range low. v0.1 stored chamber as a bare point, which broke the schema's own range rule; both are now available."
+    },
+    "max_chamber_temperature_c": {
+      "type": "number",
+      "description": "[process] (degC) Chamber range high."
+    },
+    "chamber_temperature_c": {
+      "type": "number",
+      "description": "[process] (degC) OpenPrintTag key 41 \u2014 chosen/ideal chamber point. The Orca/Bambu family writes 0 to mean 'no chamber / unset'; that sentinel is dropped at ingest rather than published as an ideal 0 degC chamber."
+    },
+    "preheat_temperature_c": {
+      "type": "number",
+      "description": "[process] (degC) OpenPrintTag key 36."
+    },
+    "standby_temperature_c": {
+      "type": "number",
+      "description": "[process] (degC) Idle/standby nozzle temperature during tool changes (Cura 'standby temperature', Orca/Prusa idle_temperature)."
+    },
+    "flow_temp_graph": {
+      "type": "array",
+      "items": {
+        "type": "array",
+        "items": {
+          "type": "number"
+        },
+        "minItems": 2,
+        "maxItems": 2
+      },
+      "description": "[process] ([[mm3/s,degC]]) Required nozzle temperature as a FUNCTION of volumetric flow, as [[flow, temp], ...]. The only constitutive relation carried by consumer formats (Cura 'processing temperature graph', OrcaSlicer material_flow_temp_graph). The curve is machine-scoped upstream and is NOT bounded by min/max_print_temperature_c \u2014 it routinely extends past both ends, so the two must not be reconciled against each other."
+    },
+    "nozzle_diameter_mm": {
+      "type": "number",
+      "description": "[process] (mm) As-run nozzle diameter.",
+      "minimum": 0
+    },
+    "min_nozzle_diameter_mm": {
+      "type": "number",
+      "description": "[process] (mm) MATERIAL-SIDE REQUIREMENT: smallest nozzle the vendor supports (filled/abrasive grades). A constraint, not an as-run value.",
+      "minimum": 0
+    },
+    "required_nozzle_hrc": {
+      "type": "number",
+      "description": "[process] MATERIAL-SIDE REQUIREMENT: vendor-declared minimum nozzle hardness, from OrcaSlicer/Bambu required_nozzle_HRC, recorded verbatim. CAVEAT: observed upstream values cluster at 0/3 for unfilled grades and 30/40 for filled ones; the low values are not meaningful Rockwell C hardnesses (the scale is not used below ~20 HRC) and behave as an upstream sentinel for \"no special nozzle required\". Treat as a vendor code, unvalidated.",
+      "minimum": 0
+    },
+    "filament_diameter_mm": {
+      "type": "number",
+      "description": "[process] (mm) OpenPrintTag key 30 (default 1.75).",
+      "minimum": 0
+    },
+    "filament_diameter_tolerance_mm": {
+      "type": "number",
+      "description": "[process] (mm) Stated +/- diameter tolerance. Bounds the achievable flow accuracy, so it belongs beside the diameter it qualifies.",
+      "minimum": 0
+    },
+    "layer_height_mm": {
+      "type": "number",
+      "description": "[process] (mm) As-run layer height.",
+      "minimum": 0
+    },
+    "line_width_mm": {
+      "type": "number",
+      "description": "[process] (mm) As-run extrusion width.",
+      "minimum": 0
+    },
+    "print_speed_mm_s": {
+      "type": "number",
+      "description": "[process] (mm/s) As-run print speed.",
+      "minimum": 0
+    },
+    "flow_ratio": {
+      "type": "number",
+      "description": "[process] Extrusion multiplier (1.0 = 100%).",
+      "minimum": 0
+    },
+    "max_volumetric_speed_mm3_s": {
+      "type": "number",
+      "description": "[process] (mm3/s) Vendor/slicer volumetric flow ceiling.",
+      "minimum": 0
+    },
+    "pressure_advance": {
+      "type": "number",
+      "description": "[process] Pressure-advance / linear-advance factor."
+    },
+    "fan_min_pct": {
+      "type": "number",
+      "description": "[process] (%) Part-cooling fan floor.",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "fan_max_pct": {
+      "type": "number",
+      "description": "[process] (%) Part-cooling fan ceiling.",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "shrinkage_xy_pct": {
+      "type": "number",
+      "description": "[process] (%) In-plane shrinkage compensation, 100 = no shrink (Cura cura:material_shrinkage_percentage(_xy), Orca/Prusa filament_shrink). First-order dimensional property."
+    },
+    "shrinkage_z_pct": {
+      "type": "number",
+      "description": "[process] (%) Through-thickness shrinkage compensation, 100 = no shrink."
+    },
+    "infill_density_pct": {
+      "type": "number",
+      "description": "[process] (%) As-run infill density.",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "infill_pattern": {
+      "type": "string",
+      "description": "[process] As-run infill pattern."
+    },
+    "wall_count": {
+      "type": "integer",
+      "description": "[process] Perimeter count; walls carry most load at low infill.",
+      "minimum": 0
+    },
+    "retraction_mm": {
+      "type": "number",
+      "description": "[process] (mm) Retraction distance.",
+      "minimum": 0
+    },
+    "retraction_speed_mm_s": {
+      "type": "number",
+      "description": "[process] (mm/s) Retraction speed.",
+      "minimum": 0
+    },
+    "drying_temperature_c": {
+      "type": "number",
+      "description": "[process] (degC) OpenPrintTag key 57 \u2014 drying AS PERFORMED for this observation. The vendor-published limit is max_dry_temperature_c (block M)."
+    },
+    "drying_time_min": {
+      "type": "number",
+      "description": "[process] (min) OpenPrintTag key 58 \u2014 drying time as performed.",
+      "minimum": 0
+    },
+    "printer_model_reported": {
+      "type": "string",
+      "description": "[process] Coarse printer identity EXACTLY as the source reported it. This is provenance-grade text, not an equipment record: the exact system, its components, calibration and environment live in the Applied-System Addendum, which links here via core_record_ref."
+    },
+    "specimen_standard": {
+      "type": "string",
+      "description": "[geometry] ISO 527-2 | ASTM D638 | ..."
+    },
+    "specimen_geometry": {
+      "type": "string",
+      "description": "[geometry] 1A | 1BA | Type IV | cube | prism | as-part."
+    },
+    "specimen_length_mm": {
+      "type": "number",
+      "description": "[geometry] (mm) Overall specimen length.",
+      "minimum": 0
+    },
+    "specimen_width_mm": {
+      "type": "number",
+      "description": "[geometry] (mm) Overall specimen width.",
+      "minimum": 0
+    },
+    "specimen_thickness_mm": {
+      "type": "number",
+      "description": "[geometry] (mm) Overall specimen thickness.",
+      "minimum": 0
+    },
+    "gauge_cross_section_mm2": {
+      "type": "number",
+      "description": "[geometry] (mm2) Load-bearing cross-section at the gauge.",
+      "minimum": 0
+    },
+    "nominal_wall_thickness_mm": {
+      "type": "number",
+      "description": "[geometry] (mm) Designed wall thickness of the printed shell.",
+      "minimum": 0
+    },
+    "skin_thickness_mm": {
+      "type": "number",
+      "description": "[geometry] (mm) Solid top/bottom skin per side. On thin coupons the skins dominate the solid shell ring (0.8 mm skins on a 3.2 mm D638 bar = 50% of the thickness), so it is not derivable from wall thickness.",
+      "minimum": 0
+    },
+    "min_feature_size_mm": {
+      "type": "number",
+      "description": "[geometry] (mm) Smallest printed feature.",
+      "minimum": 0
+    },
+    "part_height_mm": {
+      "type": "number",
+      "description": "[geometry] (mm) Build height.",
+      "minimum": 0
+    },
+    "num_layers": {
+      "type": "integer",
+      "description": "[geometry] Layer count.",
+      "minimum": 0
+    },
+    "layer_time_s": {
+      "type": "number",
+      "description": "[geometry] (s) Per-layer dwell -> interlayer healing window.",
+      "minimum": 0
+    },
+    "toolpath_length_mm": {
+      "type": "number",
+      "description": "[geometry] (mm) Proxy for layer_time when time is not reported.",
+      "minimum": 0
+    },
+    "characteristic_length_mm": {
+      "type": "number",
+      "description": "[geometry] (mm) Thermal-mass proxy (V/A).",
+      "minimum": 0
+    },
+    "build_orientation_code": {
+      "type": "string",
+      "description": "[geometry] X | Y | Z | XY_45 (load vs layers).",
+      "enum": [
+        "X",
+        "Y",
+        "Z",
+        "XY_45"
+      ]
+    },
+    "print_orientation": {
+      "type": "string",
+      "description": "[geometry] flat | on_edge | upright.",
+      "enum": [
+        "flat",
+        "on_edge",
+        "upright"
+      ]
+    },
+    "raster_angle_deg": {
+      "type": "number",
+      "description": "[geometry] (deg) Raster/infill angle relative to the load axis."
+    },
+    "is_standard_coupon": {
+      "type": "boolean",
+      "description": "[geometry] Standard test coupon (True) vs real-part geometry (False). NULL when the source does not say \u2014 absence of a named standard is not evidence of a non-standard specimen."
+    },
+    "part_density_g_cm3": {
+      "type": "number",
+      "description": "[structure] (g/cm3) AS-PRINTED part density (not the filament density in block B). The direct observable of infill x flow x (1 - void); when a source reports it, it supersedes every inferred estimate. relative_density_pct and void_fraction_pct are derivable from it given the fully-dense reference.",
+      "minimum": 0
+    },
+    "relative_density_pct": {
+      "type": "number",
+      "description": "[structure] (%) Part / fully-dense, when a source reports it that way.",
+      "minimum": 0
+    },
+    "void_fraction_pct": {
+      "type": "number",
+      "description": "[structure] (%) Porosity. Complement of relative_density_pct; store whichever the source stated and do not back-fill the other.",
+      "minimum": 0
+    },
+    "degree_of_healing": {
+      "type": "number",
+      "description": "[structure] 0..1 interlayer weld/reptation completeness.",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "interlayer_bond_quality": {
+      "type": "string",
+      "description": "[structure] Qualitative interlayer assessment when no number exists."
+    },
+    "crystallinity_measured_pct": {
+      "type": "number",
+      "description": "[structure] (%) Measured (DSC/XRD) degree of crystallinity for this specimen.",
+      "minimum": 0
+    },
+    "fiber_alignment_factor": {
+      "type": "number",
+      "description": "[structure] 0..1 fibre alignment with the load axis.",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "surface_roughness_ra_um": {
+      "type": "number",
+      "description": "[structure] (um) Arithmetic mean roughness Ra.",
+      "minimum": 0
+    },
+    "tensile_strength_mpa": {
+      "type": "number",
+      "description": "[properties] (MPa) Ultimate tensile strength. On a moisture_response record this is the FITTED dry intercept of the regression, not a value measured on any one specimen \u2014 read it with measurement_confidence and record_kind.",
+      "minimum": 0
+    },
+    "tensile_strength_stddev_mpa": {
+      "type": "number",
+      "description": "[properties] (MPa) Standard deviation of tensile_strength_mpa.",
+      "minimum": 0
+    },
+    "tensile_modulus_mpa": {
+      "type": "number",
+      "description": "[properties] (MPa) Young's modulus in tension.",
+      "minimum": 0
+    },
+    "tensile_modulus_stddev_mpa": {
+      "type": "number",
+      "description": "[properties] (MPa) Standard deviation of tensile_modulus_mpa.",
+      "minimum": 0
+    },
+    "elongation_at_break_pct": {
+      "type": "number",
+      "description": "[properties] (%) Strain at break.",
+      "minimum": 0
+    },
+    "elongation_at_break_stddev_pct": {
+      "type": "number",
+      "description": "[properties] (%) Standard deviation of elongation_at_break_pct.",
+      "minimum": 0
+    },
+    "flexural_strength_mpa": {
+      "type": "number",
+      "description": "[properties] (MPa) Flexural strength.",
+      "minimum": 0
+    },
+    "flexural_strength_stddev_mpa": {
+      "type": "number",
+      "description": "[properties] (MPa) Standard deviation of flexural_strength_mpa.",
+      "minimum": 0
+    },
+    "flexural_modulus_mpa": {
+      "type": "number",
+      "description": "[properties] (MPa) Flexural modulus.",
+      "minimum": 0
+    },
+    "flexural_modulus_stddev_mpa": {
+      "type": "number",
+      "description": "[properties] (MPa) Standard deviation of flexural_modulus_mpa.",
+      "minimum": 0
+    },
+    "impact_strength_kj_m2": {
+      "type": "number",
+      "description": "[properties] (kJ/m2) Charpy/Izod impact strength.",
+      "minimum": 0
+    },
+    "impact_strength_stddev_kj_m2": {
+      "type": "number",
+      "description": "[properties] (kJ/m2) Standard deviation of impact_strength_kj_m2.",
+      "minimum": 0
+    },
+    "interlayer_bond_strength_mpa": {
+      "type": "number",
+      "description": "[properties] (MPa) Z-direction (interlayer) tensile strength \u2014 the property most sensitive to thermal history.",
+      "minimum": 0
+    },
+    "interlayer_bond_strength_stddev_mpa": {
+      "type": "number",
+      "description": "[properties] (MPa) Standard deviation of interlayer_bond_strength_mpa.",
+      "minimum": 0
+    },
+    "hdt_c": {
+      "type": "number",
+      "description": "[properties] (degC) Heat-deflection temperature. MEANINGLESS without its load and standard (commonly 0.45 or 1.80 MPa; ISO 75 / ASTM D648). The schema has no column for them yet: record them in provenance_notes and do not compare across sources."
+    },
+    "hdt_stddev_c": {
+      "type": "number",
+      "description": "[properties] (degC) Standard deviation of hdt_c.",
+      "minimum": 0
+    },
+    "n_specimens": {
+      "type": "integer",
+      "description": "[properties] Replicates behind the values in this row.",
+      "minimum": 0
+    },
+    "hygroscopic_class": {
+      "type": "string",
+      "description": "[moisture] low | moderate | high (see HYGROSCOPIC_CLASS). A compact categorical summary of moisture sensitivity, recorded ONLY when a source states it \u2014 it is never derived from family, drying temperature or measured uptake. RESERVED: no current source states it, so the reference implementation leaves it NULL in every record.",
+      "enum": [
+        "low",
+        "moderate",
+        "high"
+      ]
+    },
+    "max_dry_temperature_c": {
+      "type": "number",
+      "description": "[moisture] (degC) Vendor-published maximum drying temperature (OFD max_dry_temperature, falling back to the material-family default when the product states none; the lowest stated value wins), recorded as published and NOT verified. Distinct from process drying_temperature_c, which is what was actually done. Follow the manufacturer's drying instructions; exceeding them can damage material or equipment."
+    },
+    "filament_moisture_pct": {
+      "type": "number",
+      "description": "[moisture] (%) As-tested filament moisture content by mass.",
+      "minimum": 0
+    },
+    "filament_moisture_min_pct": {
+      "type": "number",
+      "description": "[moisture] (%) Low end of the conditioned moisture range in this study.",
+      "minimum": 0
+    },
+    "filament_moisture_max_pct": {
+      "type": "number",
+      "description": "[moisture] (%) High end of the conditioned moisture range in this study.",
+      "minimum": 0
+    },
+    "moisture_conditioning_path": {
+      "type": "string",
+      "description": "[moisture] How the moisture state was reached, verbatim (e.g. 'dried then humidity-conditioned')."
+    },
+    "moisture_uptake_t80_h": {
+      "type": "number",
+      "description": "[moisture] (h) Hours at ambient to reach 80% of equilibrium uptake.",
+      "minimum": 0
+    },
+    "dtensile_mpa_per_pct_moisture": {
+      "type": "number",
+      "description": "[moisture] (MPa/%) SIGNED regression slope of tensile strength against moisture content \u2014 negative when strength falls, which is the usual case. Compare strength_loss_per_pct_moisture, which is the positive normalised magnitude of the same effect."
+    },
+    "dmodulus_gpa_per_pct_moisture": {
+      "type": "number",
+      "description": "[moisture] (GPa/%) SIGNED regression slope of modulus against moisture content (negative when modulus falls)."
+    },
+    "strength_loss_per_pct_moisture": {
+      "type": "number",
+      "description": "[moisture] (1/%) POSITIVE magnitude of the relative strength loss per percentage point of moisture, referenced to the dry intercept: a FRACTION per percent, not percent per percent. 0.47 means 47% of dry strength lost per 1 wt% moisture. Model: sigma(w) = sigma0 * (1 - loss * w)."
+    },
+    "moisture_response_r": {
+      "type": "number",
+      "description": "[moisture] Correlation coefficient of the reported moisture fit.",
+      "minimum": -1,
+      "maximum": 1
+    },
+    "source": {
+      "type": "string",
+      "description": "[provenance] Dataset / repo / paper key. Comma-separated when a record aggregates several sources \u2014 split on ',' before matching."
+    },
+    "doi": {
+      "type": "string",
+      "description": "[provenance] DOI of the source publication."
+    },
+    "source_citation": {
+      "type": "string",
+      "description": "[provenance] Human-readable citation."
+    },
+    "source_license": {
+      "type": "string",
+      "description": "[provenance] SPDX identifier of the source licence. When a record aggregates several upstream databases this is a comma-separated, sorted list of every SPDX id involved (e.g. 'AGPL-3.0-only,MIT') \u2014 split on ',' before matching. Unrecognised upstream strings become SPDX 'LicenseRef-' identifiers rather than being dropped."
+    },
+    "technical_data_sheet_url": {
+      "type": "string",
+      "description": "[provenance] Vendor TDS. Distinct from doi/source_citation: a vendor spec sheet is the primary evidence for datasheet-derived intrinsics.",
+      "format": "uri"
+    },
+    "safety_data_sheet_url": {
+      "type": "string",
+      "description": "[provenance] Vendor SDS/MSDS.",
+      "format": "uri"
+    },
+    "certifications": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "[provenance] Certification or compliance claims exactly as published by the source (e.g. \"UL94 V-0\", \"ISO 10993-5\", \"EU 10/2011\"). Never inferred from composition. Marketing phrases with no named scheme (\"food-safe\", \"medical-grade\") are preserved verbatim but are vendor claims, not certifications.",
+      "uniqueItems": true
+    },
+    "lab_name": {
+      "type": "string",
+      "description": "[provenance] Testing laboratory, when stated."
+    },
+    "measurement_confidence": {
+      "type": "string",
+      "description": "[provenance] measured | calculated | estimated | reported (see MEASUREMENT_CONFIDENCE).",
+      "enum": [
+        "measured",
+        "calculated",
+        "estimated",
+        "reported"
+      ]
+    },
+    "n_sources": {
+      "type": "integer",
+      "description": "[provenance] Number of independent sources that agree on this record's values.",
+      "minimum": 0
+    },
+    "has_permissive_source": {
+      "type": "boolean",
+      "description": "[provenance] At least one permissively-licensed source backs this row."
+    },
+    "is_training_ready": {
+      "type": "boolean",
+      "description": "[provenance] Row is eligible for the MEASURED-property training set: it carries an observation (not recommended settings) under a verified, redistributable licence with attribution where the licence requires it. Settings cards are False by construction \u2014 they are recommendations, not measurements. A workflow flag, not a warranty of accuracy."
+    },
+    "is_synthetic": {
+      "type": "boolean",
+      "description": "[provenance] Row was generated rather than observed."
+    },
+    "outlier_flag": {
+      "type": "boolean",
+      "description": "[provenance] Flagged as an outlier by a publisher's QA pass. RESERVED: the reference implementation runs no outlier detection, so this is NULL in every record it emits. A NULL means 'not assessed', never 'assessed and clean'."
+    },
+    "raw_data_doi": {
+      "type": "string",
+      "description": "[provenance] DOI of the underlying raw dataset, when separate."
+    },
+    "stress_strain_file": {
+      "type": "string",
+      "description": "[provenance] Pointer to a raw stress-strain artifact."
+    },
+    "record_revision": {
+      "type": "integer",
+      "description": "[provenance] Monotonic revision of this record. Mirrors the addendum sidecars, which all carry revision + created_at.",
+      "minimum": 1
+    },
+    "record_created_at": {
+      "type": "string",
+      "format": "date",
+      "description": "[provenance] ISO-8601 date this record revision was emitted.",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+    },
+    "provenance_notes": {
+      "type": "string",
+      "description": "[provenance] Free-text caveats."
+    }
+  }
+}

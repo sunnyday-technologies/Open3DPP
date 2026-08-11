@@ -1,0 +1,11 @@
+# JSON Schema has its own media type. Serving it as application/schema+json
+# lets content-negotiating validators recognise the document; browsers and
+# plain HTTP clients are unaffected.
+/schemas/*
+  Content-Type: application/schema+json; charset=utf-8
+  Access-Control-Allow-Origin: *
+  Cache-Control: public, max-age=3600
+
+/examples/*.json
+  Content-Type: application/json; charset=utf-8
+  Access-Control-Allow-Origin: *

@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+=============================================================================
+ANNOTATED COPY - Open3DPP field-census research note. Source file is verbatim
+from Ultimaker/fdm_materials @ 886e7ad (2026-06-03), CC0-1.0. Only XML
+comments have been added. Parser behaviour cited below is from
+Cura/plugins/XmlMaterialProfile/XmlMaterialProfile.py @ 63f92d4.
+EXAMPLE 2 of 3 - a composite (carbon-filled) material. 39 <hotend> blocks
+across 4 <machine> blocks, used almost entirely to encode a COMPATIBILITY
+MATRIX rather than to tune settings.
+=============================================================================
+-->
+<fdmmaterial xmlns="http://www.ultimaker.com/material" xmlns:cura="http://www.ultimaker.com/cura" version="1.3">
+    <metadata>
+        <name>
+            <brand>Ultimaker</brand>
+            <material>PET CF</material>
+            <color>Generic</color>
+            <label>Any color PET-CF</label>
+        </name>
+        <GUID>f0245d40-3657-4615-b9ab-19fc043944ca</GUID>
+        <version>16</version>
+        <color_code>#888888</color_code>
+        <description>Ultimaker PET-CF.</description>
+        <!-- <instruction_link> and <abstract_color> are the two low-coverage metadata
+             extras. instruction_link has no reader in the Cura tree; abstract_color is
+             read by VariantNode to hide the material on printers whose definition does
+             not set supports_abstract_color.
+        -->
+        <adhesion_info>Print on bare glass.</adhesion_info>
+        <instruction_link>https://support.makerbot.com/s/article/pet-cf-instructions</instruction_link>
+        <cura:pva_compatible>True</cura:pva_compatible>
+        <cura:breakaway_compatible>True</cura:breakaway_compatible>
+        <abstract_color>true</abstract_color>
+    </metadata>
+    <properties>
+        <!-- <weight> = NET filament mass in grams (500/600/650/750/800/900/1000/2300
+             observed). Beware the false friend: Orca/Prusa 'filament_spool_weight' is
+             the EMPTY SPOOL mass. The OFD equivalent is sizes.json filament_weight.
+        -->
+        <density>1.39</density>
+        <diameter>2.85</diameter>
+        <weight>750</weight>
+    </properties>
+    <settings>
+        <!-- Deprime settings -->
+        <setting key="anti ooze retract position">-16</setting>
+        <setting key="anti ooze retract speed">50</setting>
+        <!-- break temperature / break preparation temperature (both 265 degC here) are
+             the temperatures at which the material station snaps the filament. They
+             are thermal-mechanical observables with no equivalent in OFD or
+             Orca/Prusa -> harvest candidates.
+        -->
+        <setting key="break preparation position">-16</setting>
+        <setting key="break preparation speed">50</setting>
+        <setting key="break preparation temperature">265</setting>
+        <setting key="break position">-50</setting>
+        <setting key="break speed">50</setting>
+        <setting key="break temperature">265</setting>
+        <setting key="pressure release dwell time">50</setting>
+        <setting key="dwell time before break preparation move">0</setting>
+        <setting key="end of print purge volume">0</setting>
+        <setting key="end of filament purge volume">0</setting>
+        <setting key="flush purge length">60</setting>
+
+        <!-- material station (un)loading settings -->
+        <setting key="maximum park duration">7200</setting>
+        <setting key="no load move factor">0.94</setting>
+
+        <!-- print settings -->
+        <setting key="print temperature">270</setting>
+        <setting key="standby temperature">165</setting>
+        <setting key="heated bed temperature">80</setting>
+        <setting key="build volume temperature">37</setting>
+        <setting key="print cooling">10</setting>
+        <setting key="retraction amount">10</setting>
+        <setting key="adhesion tendency">1</setting>
+        <setting key="surface energy">100</setting>
+        <cura:setting key="material_flow">95</cura:setting>
+
+        <!-- For material flow sensor -->
+        <setting key="relative extrusion">1.0</setting>
+        <setting key="retract compensation">0</setting>
+
+        <!-- THE COMPATIBILITY MATRIX. This block is the reason the format matters for
+             machine-material pairing: it is not tuning, it is a per-(printer, core)
+             yes/no gate. Across the corpus there are 5,273 (material x product x
+             hotend) triples and 940 of them (17.8%) are declared incompatible.
+        -->
+        <machine>
+            <machine_identifier manufacturer="Ultimaker B.V." product="Ultimaker S3" />
+
+            <!-- Note the discrimination: AA 0.4, BB 0.4 and DD 0.4 are all 'no' while
+                 CC 0.4 and CC 0.6 are 'yes'. Same nozzle diameters, different cores, and
+                 the answer flips. A schema keyed on nozzle_diameter_mm alone CANNOT
+                 represent this row.
+            -->
+            <hotend id="AA 0.25">
+                <setting key="hardware compatible">no</setting>
+            </hotend>
+            <hotend id="AA 0.4">
+                <setting key="hardware compatible">no</setting>
+            </hotend>
+            <hotend id="AA 0.8">
+                <setting key="hardware compatible">no</setting>
+            </hotend>
+            <hotend id="BB 0.4">
+                <setting key="hardware compatible">no</setting>
+            </hotend>
+            <hotend id="BB 0.8">
+                <setting key="hardware compatible">no</setting>
+            </hotend>
+            <hotend id="DD 0.4">
+                <setting key="hardware compatible">no</setting>
+            </hotend>
+            <!-- 'hardware compatible' is parsed by _parseCompatibleValue(), which returns
+                 True for 'yes' AND for 'unknown'. Absent -> inherit the enclosing scope;
+                 absent at every scope -> True. So the format is compatible-by-default and
+                 only 'no' is a real exclusion.
+            -->
+            <hotend id="CC 0.4">
+                <setting key="hardware compatible">yes</setting>
+                <cura:setting key="cool_min_layer_time">3</cura:setting>
+            </hotend>
+            <hotend id="CC 0.6">
+                <setting key="hardware compatible">yes</setting>
+            </hotend>
+        </machine>
+
+        <!-- Four printers sharing one block via repeated <machine_identifier>.
+        -->
+        <machine>
+            <machine_identifier manufacturer="Ultimaker B.V." product="Ultimaker S5" />
+            <machine_identifier manufacturer="Ultimaker B.V." product="Ultimaker S6" />
+            <machine_identifier manufacturer="Ultimaker B.V." product="Ultimaker S7" />
+            <machine_identifier manufacturer="Ultimaker B.V." product="Ultimaker S8" />
+
+            <hotend id="AA 0.25">
+                <setting key="hardware compatible">no</setting>
+            </hotend>
+            <hotend id="AA 0.4">
+                <setting key="hardware compatible">no</setting>
+            </hotend>
+            <hotend id="AA 0.8">
+                <setting key="hardware compatible">no</setting>
+            </hotend>
+            <hotend id="BB 0.4">
+                <setting key="hardware compatible">no</setting>
+            </hotend>
+            <hotend id="BB 0.8">
+                <setting key="hardware compatible">no</setting>
+            </hotend>
+            <hotend id="DD 0.4">
+                <setting key="hardware compatible">no</setting>
+            </hotend>
+            <hotend id="AA+ 0.4">
+                <setting key="hardware compatible">no</setting>
+            </hotend>
+            <hotend id="CC 0.4">
+                <setting key="hardware compatible">yes</setting>
+                <cura:setting key="cool_min_layer_time">3</cura:setting>
+            </hotend>
+            <hotend id="CC 0.6">
+                <setting key="hardware compatible">yes</setting>
+            </hotend>
+            <hotend id="CC+ 0.4">
+                <setting key="hardware compatible">yes</setting>
+                <setting key="print temperature">280</setting>
+                <setting key="standby temperature">255</setting>
+                <setting key="no load move factor">1.0</setting>
+                <setting key="print cooling">25</setting>
+                <setting key="adhesion tendency">4</setting>
+                <cura:setting key="material_shrinkage_percentage">100.15</cura:setting>
+                <setting key="retraction amount">8</setting>
+            </hotend>
+            <hotend id="CC+ 0.6">
+                <setting key="hardware compatible">yes</setting>
+                <setting key="print temperature">280</setting>
+                <setting key="standby temperature">255</setting>
+                <setting key="no load move factor">1.0</setting>
+                <setting key="print cooling">25</setting>
+                <setting key="adhesion tendency">4</setting>
+                <cura:setting key="material_shrinkage_percentage">100.15</cura:setting>
+                <setting key="retraction amount">8</setting>
+            </hotend>
+        </machine>
+
+        <machine>
+            <machine_identifier manufacturer="Ultimaker B.V." product="Ultimaker Factor 4" />
+            <setting key="build volume temperature">50</setting>
+            <setting key="print cooling">20</setting>
+            <setting key="anti ooze retract position">-14</setting>
+            <setting key="break preparation position">-14</setting>
+            <setting key="break preparation temperature">280</setting>
+            <setting key="no load move factor">1</setting>
+            <setting key="different material purge volume">204.16</setting>
+            <setting key="same material purge volume">51.04</setting>
+            <setting key="purge speed coefficient">40</setting>
+            <cura:setting key="material_flow">100</cura:setting>
+            <setting key="retraction amount">4</setting>
+            <hotend id="AA 0.25">
+                <setting key="hardware compatible">no</setting>
+            </hotend>
+            <hotend id="AA 0.4">
+                <setting key="hardware compatible">no</setting>
+            </hotend>
+            <hotend id="AA 0.8">
+                <setting key="hardware compatible">no</setting>
+            </hotend>
+            <hotend id="BB 0.4">
+                <setting key="hardware compatible">no</setting>
+            </hotend>
+            <hotend id="BB 0.8">
+                <setting key="hardware compatible">no</setting>
+            </hotend>
+            <hotend id="DD 0.4">
+                <setting key="hardware compatible">no</setting>
+            </hotend>
+            <hotend id="CC 0.4">
+                <setting key="hardware compatible">yes</setting>
+                <cura:setting key="cool_min_layer_time">3</cura:setting>
+                <setting key="print temperature">280</setting>
+            </hotend>
+            <hotend id="CC 0.6">
+                <setting key="hardware compatible">yes</setting>
+                <setting key="print temperature">280</setting>
+            </hotend>
+            <hotend id="HT 0.6">
+                <setting key="hardware compatible">yes</setting>
+                <setting key="print temperature">280</setting>
+            </hotend>
+        </machine>
+
+        <machine>
+            <machine_identifier manufacturer="Ultimaker B.V." product="Ultimaker Factor 4+" />
+            <setting key="build volume temperature">50</setting>
+            <setting key="print cooling">20</setting>
+            <setting key="anti ooze retract position">-14</setting>
+            <setting key="break preparation position">-14</setting>
+            <setting key="break preparation temperature">280</setting>
+            <setting key="no load move factor">1</setting>
+            <setting key="different material purge volume">204.16</setting>
+            <setting key="same material purge volume">51.04</setting>
+            <setting key="purge speed coefficient">40</setting>
+            <setting key="retraction amount">4</setting>
+            <cura:setting key="material_pressure_advance_factor">0.15</cura:setting>
+            <hotend id="AA 0.25">
+                <setting key="hardware compatible">no</setting>
+            </hotend>
+            <hotend id="AA 0.4">
+                <setting key="hardware compatible">no</setting>
+            </hotend>
+            <hotend id="AA 0.8">
+                <setting key="hardware compatible">no</setting>
+            </hotend>
+            <hotend id="BB 0.4">
+                <setting key="hardware compatible">no</setting>
+            </hotend>
+            <hotend id="BB 0.8">
+                <setting key="hardware compatible">no</setting>
+            </hotend>
+            <hotend id="DD 0.4">
+                <setting key="hardware compatible">no</setting>
+            </hotend>
+            <hotend id="CC 0.4">
+                <setting key="hardware compatible">yes</setting>
+                <cura:setting key="cool_min_layer_time">3</cura:setting>
+                <setting key="print temperature">280</setting>
+            </hotend>
+            <hotend id="CC 0.6">
+                <setting key="hardware compatible">yes</setting>
+                <setting key="print temperature">290</setting>
+            </hotend>
+            <hotend id="HT 0.6">
+                <setting key="hardware compatible">yes</setting>
+                <setting key="print temperature">290</setting>
+            </hotend>
+            <hotend id="AA+ 0.4">
+                <setting key="hardware compatible">no</setting>
+            </hotend>
+            <!-- Last block: a hotend that is compatible but needs its own retraction and
+                 a +20 degC nozzle temperature. Overrides and gates coexist at the same
+                 scope level.
+            -->
+            <hotend id="CC+ 0.6">
+                <setting key="hardware compatible">yes</setting>
+                <setting key="retraction amount">3</setting>
+                <setting key="print temperature">290</setting>
+            </hotend>
+        </machine>
+    </settings>
+</fdmmaterial>
