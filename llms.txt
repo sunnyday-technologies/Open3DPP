@@ -9,11 +9,15 @@
 Maintained by Sunnyday Technologies. Apache-2.0. Draft v0.1.0 — a community
 specification, not a standards-body publication, and not a certification.
 
-The repository is authoritative; this site exists so schema identifiers resolve.
+The repository is authoritative. Schema identifiers use the open3dpp.org namespace;
+hosting there is configured but not yet deployed, so fetch from the repository.
 
 ## Canonical documents
 - Repository: https://github.com/sunnyday-technologies/Open3DPP
-- Current JSON Schema: https://open3dpp.org/schemas/core/v0.1.0/open3dpp-record.schema.json
+- Current JSON Schema (fetchable, pinned to the release tag):
+  https://raw.githubusercontent.com/sunnyday-technologies/Open3DPP/v0.1.0/schemas/core/v0.1.0/open3dpp-record.schema.json
+  Its $id is https://open3dpp.org/schemas/core/v0.1.0/open3dpp-record.schema.json —
+  a stable identifier, not currently a download location.
 - Field reference (150 columns): https://github.com/sunnyday-technologies/Open3DPP/blob/main/FIELDS.md
 - Schema reference: https://github.com/sunnyday-technologies/Open3DPP/blob/main/Open3DPP_SCHEMA.md
 - Changelog: https://github.com/sunnyday-technologies/Open3DPP/blob/main/CHANGELOG.md

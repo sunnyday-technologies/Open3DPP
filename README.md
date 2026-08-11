@@ -70,10 +70,11 @@ Each version ships its own JSON Schema (Draft 2020-12). Schemas are
 **version-exact** — `schema_version` is pinned and unknown properties are rejected — so validate a
 record against the schema matching its own `schema_version`.
 
-The `$id` (`https://open3dpp.org/schemas/core/v0.1.0/…`) resolves to the same bytes this
-repository holds: `open3dpp.org` serves `schemas/` verbatim, and the site build refuses to
-publish if any `$id` disagrees with the path it is served from. **This repository remains
-authoritative** — if the two ever differ, the repository is correct.
+The `$id` (`https://open3dpp.org/schemas/core/v0.1.0/…`) is a stable **identifier**. A JSON
+Schema `$id` names a schema; it is not required to be fetchable, and this one **is not currently
+served** — hosting is configured but not yet deployed. **Fetch schemas from this repository**,
+which is authoritative. When hosting goes live it will serve `schemas/` verbatim, and the site
+build refuses to publish if any `$id` disagrees with the path it would be served from.
 
 There is deliberately **no `latest` alias**: schemas pin `schema_version` with `const`, so a
 `latest` pointer would break every consumer the moment a new version shipped. Resolve the schema
@@ -87,10 +88,11 @@ expressed in JSON Schema and are enforced by the publisher instead — the norma
 
 ```bash
 pip install check-jsonschema
-# from the repository
+# from a local clone
 check-jsonschema --schemafile schemas/core/v0.1.0/open3dpp-record.schema.json examples/*.json
-# or by identifier
-check-jsonschema --schemafile https://open3dpp.org/schemas/core/v0.1.0/open3dpp-record.schema.json my-record.json
+# or over the network, pinned to the release tag (immutable)
+SCHEMA=https://raw.githubusercontent.com/sunnyday-technologies/Open3DPP/v0.1.0/schemas/core/v0.1.0/open3dpp-record.schema.json
+check-jsonschema --schemafile "$SCHEMA" my-record.json
 ```
 
 ```python
