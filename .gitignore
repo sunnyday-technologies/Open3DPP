@@ -2,4 +2,8 @@ __pycache__/
 *.pyc
 .DS_Store
 Thumbs.db
+
+# Build and tool artifacts — never part of the published schema repo.
 .cloudflare/
+.wrangler/
+node_modules/
