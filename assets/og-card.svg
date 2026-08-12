@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630" role="img" aria-labelledby="t d">
+  <title id="t">Open3DPP — Open Data Standard for FFF/FDM Polymer Printing</title>
+  <desc id="d">Open3DPP wordmark on the Sunnyday brand blue, with the eight schema blocks listed</desc>
+  <rect width="1200" height="630" fill="#013a73"/>
+  <rect y="614" width="1200" height="16" fill="#97d700"/>
+  <text x="80" y="150" font-family="Barlow, Arial, sans-serif" font-weight="600" font-size="34" fill="#97d700" letter-spacing="6">OPEN DATA STANDARD</text>
+  <text x="80" y="280" font-family="Barlow, Arial, sans-serif" font-weight="600" font-size="112" fill="#ffffff">Open3DPP</text>
+  <text x="80" y="350" font-family="Raleway, Arial, sans-serif" font-size="38" fill="#c2d4e0">FFF / FDM polymer printing</text>
+  <text x="80" y="440" font-family="Raleway, Arial, sans-serif" font-size="30" fill="#f0f4f7">One row = one characterization observation.</text>
+  <text x="80" y="486" font-family="Raleway, Arial, sans-serif" font-size="30" fill="#f0f4f7">152 typed columns. Every one with a unit and a purpose.</text>
+  <text x="80" y="560" font-family="'IBM Plex Mono', monospace" font-size="24" fill="#97d700">identity · composition · process · geometry · structure · properties · moisture · provenance</text>
+</svg>

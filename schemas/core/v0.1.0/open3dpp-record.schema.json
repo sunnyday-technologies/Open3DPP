@@ -302,7 +302,7 @@
     },
     "bed_temperature_c": {
       "type": "number",
-      "description": "[process] (degC) Chosen/consensus bed point. Present for symmetry with print_temperature_c; the range columns remain authoritative.",
+      "description": "[process] (degC) Chosen/consensus bed point. Present for symmetry with print_temperature_c; the range columns remain authoritative. A source stating 0 means the bed is NOT HEATED, not that it sits at 0 degC: it is at ambient. Such rows record the standard laboratory ambient (ISO 291 / ASTM D618, 23 degC) and say so in provenance_notes, so the substitution is visible and reversible rather than silent.",
       "minimum": -273.15,
       "maximum": 300
     },
@@ -332,7 +332,7 @@
     },
     "first_layer_print_temperature_c": {
       "type": "number",
-      "description": "[process] (degC) Nozzle temperature for the FIRST layer, which vendors commonly raise above the bulk value for adhesion. Distinct from print_temperature_c; absent means the source stated one temperature, not that the two are equal.",
+      "description": "[process] (degC) Nozzle temperature for the FIRST layer, which vendors commonly raise above the bulk value for adhesion. Distinct from print_temperature_c; absent means the source stated one temperature, not that the two are equal. It MAY exceed max_print_temperature_c and often does \u2014 that range describes bulk printing, and a hotter first layer is deliberate, not an inconsistency to reconcile.",
       "minimum": -273.15,
       "maximum": 600
     },

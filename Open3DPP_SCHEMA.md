@@ -78,6 +78,69 @@ exists alongside the tag.
    each other; drying **as performed** (process, `drying_temperature_c`) is distinct from the
    vendor-published drying limit (`max_dry_temperature_c`, moisture).
 
+## Conformance
+
+The key words MUST, MUST NOT, SHOULD, SHOULD NOT and MAY are to be interpreted as
+described in RFC 2119.
+
+A **conforming record** MUST validate against the published schema whose version equals its own
+`schema_version`, MUST satisfy the cross-field invariants below, and MUST NOT state a value the
+source did not support — absent is always permitted, and is the correct encoding for unknown.
+
+A **conforming producer** SHOULD carry provenance sufficient to trace any value to its source
+(`source`, and `doi` or `source_citation` where the source licence conditions reuse on
+attribution), and MUST NOT infer a vendor claim — certifications, safety trait tags, drying
+limits, hardware requirements — from anything other than that vendor stating it.
+
+Validity is not completeness. A record with three populated columns can be perfectly conforming;
+it is simply sparse. Nothing in this specification obliges a producer to fill a column, and a
+consumer MUST NOT read absence as a zero, a default, or a negative assertion.
+
+There is no conformance certification, no conformance mark, and no registry of conforming
+implementations. Validating against the schema is the whole of the claim.
+
+### Minimum viable record
+
+| Field | Why |
+|---|---|
+| `record_id` | stable identity for the row |
+| `record_kind` | which of the three shapes this is |
+| `schema_version` | selects the schema that validates it |
+| `record_revision`, `record_created_at` | which revision a citation refers to |
+
+Everything else is optional. In practice a useful record also carries `brand_name`,
+`material_name` and at least one observation; but that is advice, not conformance.
+
+## Versioning, breaking changes and deprecation
+
+- A change is **additive** — and ships in a minor version — when it adds an optional column, adds
+  an enum member, relaxes a constraint, or corrects prose. Records valid before remain valid.
+- A change is **breaking** — and requires a major version — when it removes or renames a column,
+  changes a column's unit or meaning, tightens a constraint so previously valid records fail, or
+  adds a required field.
+- A column is **never** renamed or repurposed in place. Renaming is removal plus addition, and
+  therefore breaking.
+- **Deprecation:** a column being retired is marked deprecated in its description for at least
+  one minor version before a major version removes it. Deprecated columns keep working. Nothing
+  is deprecated today.
+- Published schema artifacts follow the permanence rule stated above: superseded, never rewritten.
+
+## Extending Open3DPP
+
+The schema is closed (`additionalProperties: false`), deliberately: an open schema cannot tell a
+typo from a new field, and silent typos are how a shared vocabulary rots.
+
+If you need to carry something the schema lacks, the intended path is to
+[propose a column](https://github.com/sunnyday-technologies/Open3DPP/issues/new?template=field-proposal.md).
+A field backed by a real source and a stated observation is exactly what a minor version is for,
+and additive changes do not invalidate anyone's records.
+
+Until then, carry the extra data **beside** the record rather than inside it — a sidecar keyed by
+`record_id`, in your own namespace. The Applied-System Addendum is the same pattern applied to
+equipment and environment context. A first-class `extensions` object is under consideration for a
+future minor version; it is not in v0.1.0, and pretending otherwise by stuffing unknown keys into
+a record will simply fail validation.
+
 ## Cross-field invariants (normative)
 
 JSON Schema cannot compare two properties, so these are enforced by the emitter

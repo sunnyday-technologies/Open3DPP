@@ -1,35 +1,39 @@
 {
   "schema_version": "0.1.0",
-  "context_id": "ctx-demo-petg-0001",
+  "context_id": "ctx-demo-pla-0001",
   "revision": "r1",
   "created_at": "2026-07-30T18:00:00Z",
   "context_kind": "run",
   "core_record_ref": {
     "standard": "Open3DPP",
     "schema_version": "0.1.0",
-    "record_id": "open3dpp-demo-material-0001"
+    "record_id": "1244e1e2-7d28-5f7b-a9f7-62eac577e9fc"
   },
   "project": {
     "project_id": "project-demo-0001",
     "organization_id": "org-demo",
-    "design_artifact_refs": ["artifact-geometry-demo"],
+    "design_artifact_refs": [
+      "artifact-geometry-demo"
+    ],
     "objective": "Demonstrate traceable context; values are illustrative and are not a print recommendation."
   },
   "material_stock": {
-    "stock_id": "stock-demo-petg-0001",
+    "stock_id": "stock-demo-pla-0001",
     "material_identity": {
-      "name": "Demonstration PETG",
+      "name": "Demonstration PLA",
       "manufacturer": "Example Manufacturer",
-      "family": "PETG",
+      "family": "PLA",
       "source": {
         "source_id": "example-material-catalog",
-        "uri": "https://example.org/materials/demo-petg",
+        "uri": "https://example.org/materials/demo-pla",
         "revision": "2026-07-30",
         "rights_status": "restricted"
       }
     },
     "lot_id": "lot-demo-01",
-    "custody_refs": ["custody-event-demo-01"],
+    "custody_refs": [
+      "custody-event-demo-01"
+    ],
     "state": {
       "moisture_state": "dried",
       "drying": {
@@ -86,8 +90,12 @@
             }
           }
         ],
-        "calibration_refs": ["calibration-demo-hotend-01"],
-        "maintenance_refs": ["maintenance-demo-hotend-01"]
+        "calibration_refs": [
+          "calibration-demo-hotend-01"
+        ],
+        "maintenance_refs": [
+          "maintenance-demo-hotend-01"
+        ]
       },
       {
         "component_id": "component-demo-nozzle-01",
@@ -138,8 +146,12 @@
         {
           "sequence": 0,
           "step_type": "material_conditioning",
-          "input_refs": ["stock-demo-petg-0001"],
-          "output_refs": ["stock-demo-petg-conditioned-0001"]
+          "input_refs": [
+            "stock-demo-petg-0001"
+          ],
+          "output_refs": [
+            "stock-demo-petg-conditioned-0001"
+          ]
         },
         {
           "sequence": 1,
@@ -191,7 +203,9 @@
         "unit": "%"
       }
     },
-    "timeseries_artifact_refs": ["artifact-environment-timeseries-demo"],
+    "timeseries_artifact_refs": [
+      "artifact-environment-timeseries-demo"
+    ],
     "location_class": "indoor_uncontrolled"
   },
   "actors": [
@@ -199,19 +213,37 @@
       "actor_id": "actor-demo-operator-01",
       "role": "operator",
       "organization_id": "org-demo",
-      "qualification_refs": ["qualification-demo-operator"]
+      "qualification_refs": [
+        "qualification-demo-operator"
+      ]
     }
   ],
   "qms": {
     "fishbone_refs": {
-      "material": ["stock-demo-petg-0001"],
-      "machine": ["system-demo-printer-01"],
-      "method": ["process-demo-plan-01"],
-      "measurement": ["measurement-bundle-demo-01"],
-      "environment": ["artifact-environment-timeseries-demo"],
-      "people": ["actor-demo-operator-01"],
-      "design": ["artifact-geometry-demo"],
-      "management_quality": ["control-plan-demo-01"]
+      "material": [
+        "stock-demo-petg-0001"
+      ],
+      "machine": [
+        "system-demo-printer-01"
+      ],
+      "method": [
+        "process-demo-plan-01"
+      ],
+      "measurement": [
+        "measurement-bundle-demo-01"
+      ],
+      "environment": [
+        "artifact-environment-timeseries-demo"
+      ],
+      "people": [
+        "actor-demo-operator-01"
+      ],
+      "design": [
+        "artifact-geometry-demo"
+      ],
+      "management_quality": [
+        "control-plan-demo-01"
+      ]
     },
     "fmea_ref": {
       "artifact_id": "artifact-fmea-demo"

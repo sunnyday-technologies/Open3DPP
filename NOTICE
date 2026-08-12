@@ -51,9 +51,13 @@ THIRD-PARTY MATERIAL INCLUDED IN THIS REPOSITORY
    Mechanical test values reused from a dataset published under Creative Commons
    Attribution 4.0 International (CC BY 4.0,
    https://creativecommons.org/licenses/by/4.0/).
-     Record key: zenodo_8089569
+     Creators:   Aniskevich, Andrey; Bulderberga, Olga
+     Title:      Characterisation of mechanical properties of materials used in
+                 3D printing
      Source:     https://doi.org/10.5281/zenodo.8089569
-     Licence:    CC-BY-4.0
+     Licence:    CC BY 4.0 — SPDX CC-BY-4.0
+                 (https://creativecommons.org/licenses/by/4.0/)
+     Record key: zenodo_8089569
    The record is a MODIFICATION of that material: individual values were
    extracted from the published tables and mapped onto Open3DPP fields; no other
    change was made to them. Creator attribution as published at the DOI above.
@@ -62,9 +66,14 @@ THIRD-PARTY MATERIAL INCLUDED IN THIS REPOSITORY
 
    Fitted moisture-response coefficients reused from an open-access article
    published under CC BY 4.0.
-     Record key: pmc_11084188
+     Creators:   Hamrol, Adam; Goralski, Blazej; Wichniarek, Radoslaw
+     Title:      The Influence of Moisture Absorption and Desorption by the ABS
+                 Filament on the Properties of Additively Manufactured Parts
+                 Using the Fused Deposition Modeling Method. Materials, 2024.
      Source:     https://doi.org/10.3390/ma17091988
-     Licence:    CC-BY-4.0
+     Licence:    CC BY 4.0 — SPDX CC-BY-4.0
+                 (https://creativecommons.org/licenses/by/4.0/)
+     Record key: pmc_11084188
    The record is a MODIFICATION of that material: coefficients reported by the
    source authors were mapped onto Open3DPP fields. Creator attribution as
    published at the DOI above.
@@ -83,13 +92,28 @@ THIRD-PARTY MATERIAL INCLUDED IN THIS REPOSITORY
    profile trees (AGPL-3.0 and LGPL-3.0 family) name every licence involved in
    their own source_license field and are not published here.
 
+5. schemas/addendum/v0.1.0/*.schema.json and examples/addendum/*.example.json
+
+   Applied-System Addendum sidecar schemas and worked examples, authored by
+   Sunnyday Technologies LLC and licensed under Apache-2.0 with the rest of this
+   repository. The examples are SYNTHETIC: the equipment, materials, operators
+   and artifacts they describe are illustrative and do not correspond to any
+   real facility, product or person.
+
+   The Apache-2.0 grant covers the schemas. It does not extend to the data an
+   instance of them carries: a sidecar describes equipment, environment, people
+   and artifacts, so an instance may contain personal data, confidential process
+   detail, or third-party material whose rights sit elsewhere. Rights over an
+   artifact payload are governed by that artifact's own rights record.
+
 --------------------------------------------------------------------------------
 TRADEMARKS (repository-wide)
 --------------------------------------------------------------------------------
 
 Third-party names appear throughout this repository — in field descriptions, in
 the changelog, in the research report and in example records. "Ultimaker",
-"Cura", "OrcaSlicer", "Bambu Studio", "PrusaSlicer", "OpenPrintTag", print-core
+"Cura", "OrcaSlicer", "Bambu Studio", "PrusaSlicer", "OpenPrintTag", "ParaMat3D",
+print-core
 designations, and all vendor and product names are the marks of their respective
 owners. They are used nominatively, to identify the format, tool or product
 being described. No affiliation, sponsorship or endorsement is implied, and no
@@ -106,7 +130,13 @@ carries its own `doi`, `source_citation` and `source_license`.
 
   Ultimaker/fdm_materials          CC0-1.0
   Ultimaker/Cura (parser source)   LGPL-3.0-or-later
-  Open Filament Database           MIT
+  Open Filament Database           MIT — Copyright (c) the Open Filament
+                                   Database contributors. The MIT licence
+                                   requires its copyright notice and permission
+                                   notice to travel with any substantial
+                                   portion; values reused here are individual
+                                   facts, and the project is credited as the
+                                   source of each row that carries them.
   OrcaSlicer / Bambu Studio        AGPL-3.0
   PrusaSlicer                      AGPL-3.0
   OpenPrintTag (field names)       MIT

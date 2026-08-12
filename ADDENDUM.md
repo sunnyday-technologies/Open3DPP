@@ -31,9 +31,20 @@ equipment-equivalence maps, and other proprietary decision logic.
 | Artifacts/time series | [`artifact-timeseries-manifest.schema.json`](schemas/addendum/v0.1.0/artifact-timeseries-manifest.schema.json) | [`artifact-timeseries-manifest.example.json`](examples/addendum/artifact-timeseries-manifest.example.json) |
 
 Every sidecar has its own stable ID, revision, creation time, provenance, governance, optional
-external crosswalks, and namespaced extensions. Sidecars link to an Open3DPP row through
-`core_record_ref.record_id`; they may also link to a concrete Open3DCP row without changing that
-standard.
+external crosswalks, and namespaced extensions.
+
+**The chain is two hops, not one.** Only the applied-system context binds to a core record; the
+other two bind to a context, which is what they describe the outcome of:
+
+| Sidecar | References | Via | Cardinality |
+|---|---|---|---|
+| Applied-system context | an Open3DPP core record | `core_record_ref.record_id` | many contexts per core record |
+| Measurement / outcome bundle | an applied-system context | `context_ref.context_id` + `revision` | many bundles per context |
+| Artifact / time-series manifest | an applied-system context | `context_ref.context_id` + `revision` | many manifests per context |
+
+A core record therefore never points outward: it is complete on its own, and context is attached
+to it rather than required by it. A sidecar may also reference a concrete Open3DCP row without
+changing that standard.
 
 ## Identity and revision rules
 
