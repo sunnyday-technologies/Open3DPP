@@ -8,10 +8,12 @@ research file.
 
 ## Reporting
 
-Use GitHub's private reporting: **Security → Report a vulnerability** on
+Preferred: GitHub's private reporting — **Security → Report a vulnerability** on
 <https://github.com/sunnyday-technologies/Open3DPP>. That keeps the report
-confidential until a fix is out. Please do not open a public issue for anything
-in the first two categories below.
+confidential until a fix is out.
+
+If you cannot use GitHub, email **security@sunn3d.com**. Please do not open a
+public issue for anything in the first two categories below.
 
 ## In scope
 
