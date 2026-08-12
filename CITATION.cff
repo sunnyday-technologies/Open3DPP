@@ -12,7 +12,7 @@ type: software
 authors:
   - family-names: Sonnentag
     given-names: Nicholas
-    email: nick@sunn3d.com
+    email: open3dpp@sunn3d.com
     affiliation: Sunnyday Technologies
     orcid: "https://orcid.org/0009-0002-1897-384X"
 version: 0.1.0
